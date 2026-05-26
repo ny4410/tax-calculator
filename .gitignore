@@ -1,0 +1,11 @@
+# ローカル開発用サーバー（Netlifyでは不要）
+# serve.ps1 はローカル確認用のため除外しない（参考用に残す）
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.suo
+*.user

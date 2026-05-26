@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ── 基本SEOメタ ─────────────────────────────────────── -->
+<title>個人事業主 税金計算ツール | 全国47都道府県対応・令和6年度版</title>
+<meta name="description" content="個人事業主・フリーランスの税金を一括計算。売上・経費を入力するだけで所得税・住民税・個人事業税・国民健康保険料・国民年金保険料の概算額がわかります。全国47都道府県対応・令和6年度（2024年）版。">
+<meta name="keywords" content="個人事業主,税金計算,フリーランス,所得税,住民税,個人事業税,国民健康保険,国民年金,確定申告,税金シミュレーター,IT,エンジニア,クリエイター,青色申告,白色申告">
+<meta name="author" content="個人事業主 税金計算ツール">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1d4ed8">
+
+<!-- ── Open Graph（SNSシェア最適化） ─────────────────────── -->
+<meta property="og:type"        content="website">
+<meta property="og:locale"      content="ja_JP">
+<meta property="og:site_name"   content="個人事業主 税金計算ツール">
+<meta property="og:title"       content="個人事業主 税金計算ツール | 全国47都道府県対応・令和6年度版">
+<meta property="og:description" content="売上・経費を入力するだけで所得税・住民税・個人事業税・国民健康保険料・国民年金を一括計算。フリーランス・個人事業主向け無料ツール。">
+
+<!-- ── Twitter Card ───────────────────────────────────── -->
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="個人事業主 税金計算ツール | 全国47都道府県対応">
+<meta name="twitter:description" content="売上・経費を入力するだけで税金をまとめて計算。フリーランス・個人事業主向け無料ツール。令和6年度版。">
+
+<!-- ── 構造化データ（JSON-LD） ────────────────────────────── -->
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "個人事業主 税金計算ツール",
+    "description": "個人事業主・フリーランス向けの税金計算Webアプリ。売上・経費を入力するだけで所得税・住民税・個人事業税・国民健康保険料・国民年金を一括計算できます。全国47都道府県対応、令和6年度版。",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "個人事業主・フリーランス"
+    },
+    "featureList": [
+      "所得税・復興特別所得税の計算",
+      "住民税の計算（全国共通）",
+      "個人事業税の計算（業種別税率対応）",
+      "国民健康保険料の計算（全国47都道府県対応）",
+      "国民年金保険料の計算",
+      "青色申告・白色申告の切り替え"
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "個人事業主が支払う税金の種類は？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "個人事業主が支払う主な税金は、所得税・復興特別所得税（国税）、住民税（地方税）、個人事業税（都道府県税）の3種類です。また、社会保険料として国民健康保険料と国民年金保険料も納付する必要があります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "青色申告と白色申告の違いは？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "青色申告は帳簿の要件を満たすことで最大65万円の特別控除が受けられ、節税効果が高い申告方法です。白色申告は帳簿の要件が緩やかですが、青色申告特別控除は適用されません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "個人事業税はいくら以上から課税されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "個人事業税は、事業所得（青色申告特別控除前）が290万円（事業主控除額）を超えた場合に課税されます。業種により税率は3%・4%・5%の3段階です。農業など一部の業種は非課税です。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "WebエンジニアやITフリーランスの個人事業税の税率は？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Webエンジニア・プログラマー・SES（システムエンジニアリングサービス）などは原則として請負業（第1種事業）に分類され、税率は5%です。ただしITコンサルタントはコンサルタント業（第3種事業・3%）、Webデザイナーはデザイン業（第3種事業・3%）となります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "国民健康保険料は都道府県によって異なりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい、国民健康保険料は市区町村ごとに料率が異なります。このツールでは全国47都道府県の代表市区町村の令和6年度料率を参考値として使用しています。実際の料率はお住まいの市区町村の公式サイトでご確認ください。"
+        }
+      }
+    ]
+  }
+]
+</script>
+<style>
+:root {
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --blue-dark: #1e40af;
+  --green: #16a34a;
+  --green-light: #f0fdf4;
+  --orange: #ea580c;
+  --orange-light: #fff7ed;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --yellow: #a16207;
+  --yellow-light: #fef9c3;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --gray-light: #f8fafc;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  background: var(--gray-light);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+}
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 50%, #1e3a8a 100%);
+  color: white;
+  padding: 2.25rem 1rem 2rem;
+  text-align: center;
+}
+header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; }
+header p { opacity: 0.8; font-size: 0.875rem; margin-top: 0.375rem; }
+.header-badge {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px; padding: 0.25rem 0.75rem; font-size: 0.8125rem;
+  margin-top: 0.875rem;
+}
+
+/* ── Main layout ── */
+main { max-width: 820px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+
+/* ── Cards ── */
+.card {
+  background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 1.5rem; margin-bottom: 1.25rem;
+}
+.card-title {
+  font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem; border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.card-title-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: var(--blue-light); color: var(--blue);
+  display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+}
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 0.8125rem; font-weight: 500; color: var(--text-muted); }
+.required { color: var(--red); }
+
+.input-wrap { position: relative; }
+.input-wrap input { padding-right: 2.25rem; }
+.input-unit {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  font-size: 0.875rem; color: var(--text-muted); pointer-events: none;
+}
+
+input[type="number"], select {
+  width: 100%; padding: 0.6rem 0.875rem; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 0.9375rem; color: var(--text); background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none; appearance: none;
+}
+input[type="number"]:focus, select:focus {
+  outline: none; border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+.radio-option {
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.625rem 0.875rem; border: 1.5px solid var(--border);
+  border-radius: 8px; cursor: pointer; transition: all 0.15s; font-size: 0.875rem;
+}
+.radio-option:has(input:checked) {
+  border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark);
+}
+.radio-option input { accent-color: var(--blue); width: 16px; height: 16px; }
+.radio-option-label { font-weight: 500; }
+.radio-option-desc { font-size: 0.75rem; color: inherit; opacity: 0.7; margin-left: auto; }
+
+.btn-calc {
+  width: 100%; padding: 0.9rem; margin-top: 0.5rem;
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color: white; border: none; border-radius: 8px;
+  font-size: 1.0625rem; font-weight: 600; cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s;
+  letter-spacing: 0.025em;
+}
+.btn-calc:hover { box-shadow: 0 4px 16px rgba(37,99,235,0.45); transform: translateY(-1px); }
+.btn-calc:active { transform: translateY(0); }
+
+/* ── Results ── */
+#result-section { display: none; }
+#result-section.visible { display: block; }
+
+/* Summary hero card */
+.summary-hero {
+  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+  color: white; border-radius: var(--radius);
+  padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--shadow-lg);
+}
+.summary-hero h2 { font-size: 0.9rem; opacity: 0.85; font-weight: 500; }
+.summary-total { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-top: 0.25rem; }
+.summary-note { font-size: 0.8125rem; opacity: 0.75; margin-top: 0.25rem; }
+
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.25rem; }
+@media (max-width: 420px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-item {
+  background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px; padding: 0.875rem;
+}
+.summary-item-label { font-size: 0.78rem; opacity: 0.85; }
+.summary-item-value { font-size: 1.1rem; font-weight: 700; margin-top: 0.2rem; }
+
+/* Income breakdown bar */
+.breakdown-bar-wrap { margin: 1.25rem 0; }
+.breakdown-bar {
+  display: flex; height: 22px; border-radius: 6px; overflow: hidden; gap: 2px;
+}
+.bar-seg { height: 100%; transition: width 0.5s ease; min-width: 2px; }
+.bar-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.625rem; }
+.legend-item { display: flex; align-items: center; gap: 0.375rem; font-size: 0.78rem; color: var(--text-muted); }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* Tax detail cards */
+.tax-list { display: flex; flex-direction: column; gap: 0.875rem; }
+.tax-item {
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.tax-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.875rem 1.125rem;
+}
+.tax-item-left { display: flex; align-items: center; gap: 0.625rem; }
+.tax-item-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.tax-item-name { font-weight: 600; font-size: 0.9375rem; }
+.tax-item-sub { font-size: 0.75rem; opacity: 0.7; margin-top: 0.1rem; }
+.tax-item-amount { font-weight: 700; font-size: 1.125rem; }
+
+.tax-item-body {
+  background: white; padding: 0.875rem 1.125rem;
+  border: 1px solid; border-top: none;
+}
+
+/* Color themes */
+.theme-blue .tax-item-header { background: var(--blue-light); color: var(--blue-dark); border-bottom: 1px solid #bfdbfe; }
+.theme-blue .tax-item-body { border-color: #bfdbfe; }
+.theme-blue .tax-item-icon { background: rgba(37,99,235,0.12); }
+
+.theme-purple .tax-item-header { background: var(--purple-light); color: var(--purple); border-bottom: 1px solid #ddd6fe; }
+.theme-purple .tax-item-body { border-color: #ddd6fe; }
+.theme-purple .tax-item-icon { background: rgba(124,58,237,0.12); }
+
+.theme-orange .tax-item-header { background: var(--orange-light); color: var(--orange); border-bottom: 1px solid #fed7aa; }
+.theme-orange .tax-item-body { border-color: #fed7aa; }
+.theme-orange .tax-item-icon { background: rgba(234,88,12,0.12); }
+
+.theme-green .tax-item-header { background: var(--green-light); color: var(--green); border-bottom: 1px solid #bbf7d0; }
+.theme-green .tax-item-body { border-color: #bbf7d0; }
+.theme-green .tax-item-icon { background: rgba(22,163,74,0.12); }
+
+.theme-yellow .tax-item-header { background: var(--yellow-light); color: var(--yellow); border-bottom: 1px solid #fde68a; }
+.theme-yellow .tax-item-body { border-color: #fde68a; }
+.theme-yellow .tax-item-icon { background: rgba(161,98,7,0.12); }
+
+/* Detail rows inside tax cards */
+.detail-rows { display: flex; flex-direction: column; gap: 0; }
+.dr {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.35rem 0; font-size: 0.85rem;
+  border-bottom: 1px dashed #f1f5f9; color: var(--text-muted);
+}
+.dr:last-child { border-bottom: none; }
+.dr.subtotal {
+  border-top: 1px solid var(--border); border-bottom: none;
+  margin-top: 0.25rem; padding-top: 0.5rem;
+  font-weight: 600; color: var(--text); font-size: 0.875rem;
+}
+.dr .v { font-weight: 500; color: var(--text); }
+.dr.subtotal .v { font-weight: 700; }
+.dr .minus { color: var(--red); }
+
+/* Alert / notice */
+.notice {
+  display: flex; gap: 0.625rem; padding: 0.875rem 1rem;
+  border-radius: 8px; font-size: 0.8125rem; margin-top: 1rem;
+  line-height: 1.5;
+}
+.notice.warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+.notice.info { background: var(--blue-light); border: 1px solid #93c5fd; color: #1e40af; }
+.notice-icon { flex-shrink: 0; }
+
+/* Footer */
+footer {
+  text-align: center; padding: 1.75rem 1rem;
+  color: var(--text-muted); font-size: 0.8rem;
+  background: white; border-top: 1px solid var(--border);
+}
+
+/* Utilities */
+.mt-1 { margin-top: 0.5rem; }
+.hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.375rem; line-height: 1.5; }
+
+/* Textarea */
+textarea {
+  width: 100%; padding: 0.6rem 0.875rem; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 0.9375rem; color: var(--text); background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical; font-family: inherit; min-height: 100px; line-height: 1.6;
+}
+textarea:focus {
+  outline: none; border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* Feedback */
+.feedback-desc { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6; }
+.btn-feedback {
+  margin-top: 0.75rem; padding: 0.65rem 1.5rem;
+  background: var(--blue); color: white; border: none; border-radius: 8px;
+  font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: background 0.15s;
+}
+.btn-feedback:hover { background: var(--blue-dark); }
+.feedback-status { margin-top: 0.625rem; font-size: 0.875rem; min-height: 1.25rem; }
+.feedback-status.success { color: var(--green); }
+.feedback-status.error   { color: var(--red); }
+
+/* Admin panel */
+.admin-wrap {
+  max-width: 820px; margin: 0 auto; padding: 0 1rem 1.25rem;
+}
+.admin-panel {
+  background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 1.5rem; border: 2px solid #fcd34d;
+}
+.admin-panel-title {
+  font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.admin-panel-sub { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1rem; }
+.admin-entry {
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.875rem; margin-bottom: 0.75rem;
+}
+.admin-entry:last-child { margin-bottom: 0; }
+.admin-entry-meta { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; align-items: center; flex-wrap: wrap; }
+.admin-entry-type {
+  font-size: 0.8rem; font-weight: 600; background: var(--blue-light);
+  color: var(--blue); padding: 0.15rem 0.5rem; border-radius: 4px;
+}
+.admin-entry-time { font-size: 0.78rem; color: var(--text-muted); }
+.admin-entry-body { font-size: 0.875rem; color: var(--text); line-height: 1.65; white-space: pre-wrap; }
+.admin-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+.btn-admin-clear {
+  padding: 0.4rem 1rem; background: var(--red-light); color: var(--red);
+  border: 1px solid #fca5a5; border-radius: 6px; font-size: 0.8125rem;
+  cursor: pointer; font-weight: 500; transition: background 0.15s;
+}
+.btn-admin-clear:hover { background: #fee2e2; }
+.admin-empty { color: var(--text-muted); font-size: 0.875rem; padding: 0.5rem 0; }
+
+/* FAQ */
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item { padding: 0.875rem 0; border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+.faq-q {
+  font-weight: 600; font-size: 0.9rem; color: var(--text);
+  margin-bottom: 0.375rem; display: flex; gap: 0.5rem;
+}
+.faq-q::before { content: 'Q.'; color: var(--blue); flex-shrink: 0; }
+.faq-a {
+  font-size: 0.875rem; color: var(--text-muted); line-height: 1.7;
+  padding-left: 1.5rem;
+}
+
+/* Privacy note */
+.privacy-note {
+  font-size: 0.78rem; color: var(--text-muted);
+  background: #f8fafc; border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.45rem 0.75rem;
+  margin-bottom: 0.625rem; line-height: 1.5;
+}
+
+/* Amount preview label */
+.amount-preview {
+  display: block; margin-top: 0.3rem;
+  font-size: 0.78rem; font-weight: 400; color: var(--text-muted);
+  text-align: left;
+}
+.amount-preview:empty { display: none; }
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+
+/* タブレット（〜 768px） */
+@media (max-width: 768px) {
+  /* iOS Safari: font-size < 16px だとフォーカス時に自動ズームするため 1rem に固定 */
+  input[type="number"], select, textarea { font-size: 1rem; }
+
+  main { padding: 1.25rem 0.875rem 2.5rem; }
+
+  .summary-total { font-size: 2rem; }
+
+  .tax-item-header { padding: 0.8rem 1rem; }
+  .tax-item-body  { padding: 0.8rem 1rem; }
+}
+
+/* スマートフォン（〜 480px） */
+@media (max-width: 480px) {
+  /* ヘッダー */
+  header { padding: 1.375rem 1rem 1.25rem; }
+  header h1 { font-size: 1.25rem; }
+  header p  { font-size: 0.8rem; }
+  .header-badge { font-size: 0.73rem; padding: 0.2rem 0.6rem; margin-top: 0.6rem; }
+
+  /* メインレイアウト */
+  main { padding: 0.875rem 0.625rem 2rem; }
+
+  /* カード共通 */
+  .card { padding: 1rem 0.875rem; margin-bottom: 0.875rem; }
+  .card-title { font-size: 0.95rem; margin-bottom: 1rem; padding-bottom: 0.625rem; }
+  .card-title-icon { width: 24px; height: 24px; font-size: 0.8rem; }
+
+  /* サマリーヒーロー */
+  .summary-hero { padding: 1.125rem 1rem; margin-bottom: 0.875rem; }
+  .summary-hero h2 { font-size: 0.8125rem; }
+  .summary-total { font-size: 1.65rem; letter-spacing: -0.025em; }
+  .summary-note  { font-size: 0.72rem; }
+  .summary-grid  { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+  .summary-item  { padding: 0.625rem 0.75rem; border-radius: 6px; }
+  .summary-item-label { font-size: 0.7rem; }
+  .summary-item-value { font-size: 0.9rem; margin-top: 0.15rem; }
+
+  /* 内訳バー */
+  .breakdown-bar { height: 14px; }
+  .bar-legend    { gap: 0.25rem 0.5rem; margin-top: 0.5rem; }
+  .legend-item   { font-size: 0.7rem; }
+  .legend-dot    { width: 8px; height: 8px; }
+
+  /* 税金カード */
+  .tax-list { gap: 0.625rem; }
+  .tax-item-header {
+    padding: 0.75rem 0.875rem;
+    flex-wrap: wrap; gap: 0.375rem;
+  }
+  .tax-item-icon  { width: 28px; height: 28px; font-size: 0.875rem; border-radius: 6px; }
+  .tax-item-name  { font-size: 0.875rem; }
+  .tax-item-sub   { font-size: 0.68rem; }
+  .tax-item-amount {
+    font-size: 0.9375rem;
+    width: 100%; text-align: right;
+    padding-top: 0.375rem; margin-top: 0.125rem;
+    border-top: 1px dashed rgba(0,0,0,0.12);
+  }
+  .tax-item-body { padding: 0.625rem 0.875rem; }
+
+  /* 詳細行：ラベルが長い場合は縦並びに */
+  .dr {
+    flex-direction: column; align-items: flex-start;
+    gap: 0.1rem; padding: 0.4rem 0;
+  }
+  .dr .v { text-align: left; font-size: 0.8125rem; }
+  .dr.subtotal {
+    flex-direction: row; align-items: center;
+    padding-top: 0.5rem;
+  }
+  .dr.subtotal .v { margin-left: auto; text-align: right; }
+
+  /* 注意文 */
+  .notice { font-size: 0.75rem; padding: 0.75rem 0.875rem; gap: 0.5rem; }
+
+  /* フォーム */
+  .form-grid { gap: 0.75rem; }
+  label { font-size: 0.78rem; }
+  input[type="number"], select { padding: 0.6rem 0.75rem; border-radius: 7px; }
+  .input-unit { font-size: 0.8125rem; right: 0.625rem; }
+  .input-wrap input { padding-right: 2rem; }
+
+  /* ラジオボタン */
+  .radio-option { padding: 0.5rem 0.75rem; font-size: 0.8125rem; gap: 0.5rem; }
+  .radio-option-label { font-size: 0.8125rem; }
+  .radio-option-desc  { font-size: 0.7rem; margin-left: 0; display: block; margin-top: 0.125rem; }
+  .radio-option input { width: 15px; height: 15px; }
+
+  /* 計算ボタン */
+  .btn-calc { font-size: 1rem; padding: 0.8rem; margin-top: 0.375rem; }
+
+  /* プライバシー */
+  .privacy-note { font-size: 0.72rem; }
+
+  /* FAQ */
+  .faq-item { padding: 0.75rem 0; }
+  .faq-q { font-size: 0.875rem; }
+  .faq-a { font-size: 0.8125rem; padding-left: 1.25rem; }
+
+  /* フィードバック */
+  .feedback-desc { font-size: 0.8125rem; }
+  .btn-feedback  { width: 100%; }
+
+  /* 管理パネル */
+  .admin-wrap { padding: 0 0.625rem 0.875rem; }
+  .admin-entry-meta { flex-wrap: wrap; gap: 0.25rem; }
+
+  /* フッター */
+  footer { font-size: 0.73rem; padding: 1.375rem 1rem; }
+}
+
+/* 極小画面（〜 360px） */
+@media (max-width: 360px) {
+  header h1 { font-size: 1.125rem; }
+  .summary-total { font-size: 1.45rem; }
+  .summary-grid  { grid-template-columns: 1fr; }
+  .card { padding: 0.875rem 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧮 個人事業主 税金計算ツール</h1>
+  <p>売上・経費を入力して、納付すべき税金の目安を計算します</p>
+  <div class="header-badge">🗾 全国47都道府県対応 ／ 令和6年度（2024年）版</div>
+</header>
+
+<main id="main-content">
+
+  <!-- ── ツール説明（SEO向けコンテンツ） ── -->
+  <section aria-label="ツール概要" style="margin-bottom:1.25rem;">
+    <div class="card" style="padding:1.125rem 1.5rem;">
+      <p style="font-size:0.875rem;color:var(--text-muted);line-height:1.8;">
+        このツールは<strong>個人事業主・フリーランス</strong>の方が1年間に納付する税金・社会保険料の概算額を計算します。
+        <strong>所得税・復興特別所得税・住民税・個人事業税・国民健康保険料・国民年金保険料</strong>をまとめて試算でき、
+        青色申告（65万・55万・10万円控除）と白色申告の比較にも活用できます。
+        <strong>全国47都道府県</strong>の国民健康保険料率（令和6年度）に対応しています。
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 入力フォーム ── -->
+  <section aria-label="計算入力フォーム">
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon">✏️</div>
+      基本情報を入力
+    </div>
+
+    <div class="form-grid">
+
+      <!-- 都道府県 -->
+      <div class="form-group full">
+        <label>都道府県<span class="required"> *</span></label>
+        <select id="prefecture" autocomplete="off">
+          <option value="北海道">北海道（札幌市）</option>
+          <option value="青森県">青森県（青森市）</option>
+          <option value="岩手県">岩手県（盛岡市）</option>
+          <option value="宮城県">宮城県（仙台市）</option>
+          <option value="秋田県">秋田県（秋田市）</option>
+          <option value="山形県">山形県（山形市）</option>
+          <option value="福島県">福島県（福島市）</option>
+          <option value="茨城県">茨城県（水戸市）</option>
+          <option value="栃木県">栃木県（宇都宮市）</option>
+          <option value="群馬県">群馬県（前橋市）</option>
+          <option value="埼玉県">埼玉県（さいたま市）</option>
+          <option value="千葉県">千葉県（千葉市）</option>
+          <option value="東京都" selected>東京都（新宿区）</option>
+          <option value="神奈川県">神奈川県（横浜市）</option>
+          <option value="新潟県">新潟県（新潟市）</option>
+          <option value="富山県">富山県（富山市）</option>
+          <option value="石川県">石川県（金沢市）</option>
+          <option value="福井県">福井県（福井市）</option>
+          <option value="山梨県">山梨県（甲府市）</option>
+          <option value="長野県">長野県（長野市）</option>
+          <option value="岐阜県">岐阜県（岐阜市）</option>
+          <option value="静岡県">静岡県（静岡市）</option>
+          <option value="愛知県">愛知県（名古屋市）</option>
+          <option value="三重県">三重県（津市）</option>
+          <option value="滋賀県">滋賀県（大津市）</option>
+          <option value="京都府">京都府（京都市）</option>
+          <option value="大阪府">大阪府（大阪市）</option>
+          <option value="兵庫県">兵庫県（神戸市）</option>
+          <option value="奈良県">奈良県（奈良市）</option>
+          <option value="和歌山県">和歌山県（和歌山市）</option>
+          <option value="鳥取県">鳥取県（鳥取市）</option>
+          <option value="島根県">島根県（松江市）</option>
+          <option value="岡山県">岡山県（岡山市）</option>
+          <option value="広島県">広島県（広島市）</option>
+          <option value="山口県">山口県（山口市）</option>
+          <option value="徳島県">徳島県（徳島市）</option>
+          <option value="香川県">香川県（高松市）</option>
+          <option value="愛媛県">愛媛県（松山市）</option>
+          <option value="高知県">高知県（高知市）</option>
+          <option value="福岡県">福岡県（福岡市）</option>
+          <option value="佐賀県">佐賀県（佐賀市）</option>
+          <option value="長崎県">長崎県（長崎市）</option>
+          <option value="熊本県">熊本県（熊本市）</option>
+          <option value="大分県">大分県（大分市）</option>
+          <option value="宮崎県">宮崎県（宮崎市）</option>
+          <option value="鹿児島県">鹿児島県（鹿児島市）</option>
+          <option value="沖縄県">沖縄県（那覇市）</option>
+        </select>
+      </div>
+
+      <!-- 売上 -->
+      <div class="form-group">
+        <label>年間売上（税抜）<span class="required"> *</span></label>
+        <div class="input-wrap">
+          <input type="number" id="revenue" placeholder="例: 5000000" min="0" step="1000" autocomplete="off" oninput="updatePreview('revenue','revenue-preview')">
+          <span class="input-unit">円</span>
+        </div>
+        <span class="amount-preview" id="revenue-preview"></span>
+      </div>
+
+      <!-- 経費 -->
+      <div class="form-group">
+        <label>年間経費（必要経費合計）<span class="required"> *</span></label>
+        <div class="input-wrap">
+          <input type="number" id="expenses" placeholder="例: 1500000" min="0" step="1000" autocomplete="off" oninput="updatePreview('expenses','expenses-preview')">
+          <span class="input-unit">円</span>
+        </div>
+        <span class="amount-preview" id="expenses-preview"></span>
+      </div>
+
+      <!-- 年齢 -->
+      <div class="form-group">
+        <label>年齢（介護保険の有無に影響）<span class="required"> *</span></label>
+        <select id="age" autocomplete="off">
+          <option value="under40">39歳以下</option>
+          <option value="40to64" selected>40〜64歳</option>
+          <option value="over65">65歳以上</option>
+        </select>
+      </div>
+
+      <!-- 業種 -->
+      <div class="form-group full">
+        <label>業種（個人事業税の税率に影響）<span class="required"> *</span></label>
+        <select id="business-type" autocomplete="off">
+          <optgroup label="🖥️ IT・エンジニア系">
+            <option value="5" selected>Webエンジニア・プログラマー・システム開発（請負業｜第1種 5%）</option>
+            <option value="5">SES・システムエンジニアリングサービス（請負業｜第1種 5%）</option>
+            <option value="5">アプリ開発・ソフトウェア開発（請負業｜第1種 5%）</option>
+            <option value="5">インフラエンジニア・ネットワーク構築（請負業｜第1種 5%）</option>
+            <option value="3">ITコンサルタント・システムコンサルタント（コンサルタント業｜第3種 3%）</option>
+          </optgroup>
+          <optgroup label="🎨 クリエイター・デザイン系">
+            <option value="3">Webデザイナー・グラフィックデザイナー（デザイン業｜第3種 3%）</option>
+            <option value="3">イラストレーター・キャラクターデザイン（デザイン業｜第3種 3%）</option>
+            <option value="3">UI/UXデザイナー・DTPデザイナー（デザイン業｜第3種 3%）</option>
+            <option value="5">動画クリエイター・動画編集者（請負業｜第1種 5%）</option>
+            <option value="5">写真撮影業・カメラマン（写真業｜第1種 5%）</option>
+            <option value="5">YouTuber・配信者・インフルエンサー（請負業｜第1種 5%）</option>
+          </optgroup>
+          <optgroup label="✍️ ライター・制作系">
+            <option value="5">ライター・コピーライター・編集者（請負業｜第1種 5%）</option>
+            <option value="5">翻訳・通訳（請負業｜第1種 5%）</option>
+            <option value="5">マンガ家・漫画家（請負業｜第1種 5%）</option>
+            <option value="5">音楽制作・作曲・編曲（請負業｜第1種 5%）</option>
+          </optgroup>
+          <optgroup label="📢 マーケティング・コンサル系">
+            <option value="3">経営コンサルタント・ビジネスコンサルタント（コンサルタント業｜第3種 3%）</option>
+            <option value="3">Webマーケター・SEOコンサルタント（コンサルタント業｜第3種 3%）</option>
+            <option value="5">広告代理業・広告業（代理業｜第1種 5%）</option>
+          </optgroup>
+          <optgroup label="🏥 医療・士業・専門職">
+            <option value="3">医師・歯科医師（医業・歯科医業｜第3種 3%）</option>
+            <option value="3">薬剤師（薬剤師業｜第3種 3%）</option>
+            <option value="3">看護師・助産師（医業に含む｜第3種 3%）</option>
+            <option value="3">獣医師（獣医業｜第3種 3%）</option>
+            <option value="3">弁護士・司法書士・行政書士（第3種 3%）</option>
+            <option value="3">税理士・公認会計士・社会保険労務士（第3種 3%）</option>
+            <option value="3">弁理士・不動産鑑定士・土地家屋調査士（第3種 3%）</option>
+          </optgroup>
+          <optgroup label="💆 美容・生活サービス系">
+            <option value="3">美容師・ネイリスト・まつ毛エクステ（美容業｜第3種 3%）</option>
+            <option value="3">理容師・バーバー（理容業｜第3種 3%）</option>
+            <option value="3">エステティシャン・整体師（第3種 3%）</option>
+            <option value="3">クリーニング業（第3種 3%）</option>
+            <option value="5">あん摩・鍼灸師（あん摩業｜第1種 5%）</option>
+          </optgroup>
+          <optgroup label="🎓 教育・講師系">
+            <option value="3">スポーツインストラクター・パーソナルトレーナー（諸芸師匠業｜第3種 3%）</option>
+            <option value="3">音楽・ピアノ・ダンス講師（諸芸師匠業｜第3種 3%）</option>
+            <option value="3">家庭教師・オンライン講師（請負業またはコンサルタント業｜第3種 3%）</option>
+          </optgroup>
+          <optgroup label="🏪 小売・飲食・製造">
+            <option value="5">小売業・ネットショップ・物品販売（物品販売業｜第1種 5%）</option>
+            <option value="5">飲食業・カフェ・フードデリバリー（飲食店業｜第1種 5%）</option>
+            <option value="5">製造業・ハンドメイド制作販売（製造業｜第1種 5%）</option>
+            <option value="5">出版業・印刷業（第1種 5%）</option>
+          </optgroup>
+          <optgroup label="🏠 不動産・運輸">
+            <option value="5">不動産賃貸業・民泊・駐車場業（第1種 5%）</option>
+            <option value="5">運送業・配送業・軽貨物（第1種 5%）</option>
+            <option value="5">不動産売買・仲介（代理業・仲立業｜第1種 5%）</option>
+          </optgroup>
+          <optgroup label="🌾 農業・非課税業種">
+            <option value="0">農業・林業・漁業（個人事業税 非課税）</option>
+            <option value="0">その他 個人事業税の非課税業種</option>
+          </optgroup>
+          <optgroup label="その他">
+            <option value="4">畜産業・水産業・薪炭製造業（第2種 4%）</option>
+            <option value="5">その他 第1種事業（5%）</option>
+            <option value="3">その他 第3種事業（3%）</option>
+          </optgroup>
+        </select>
+        <p class="hint">※ 業種の分類が不明な場合は、所轄の都道府県税事務所または税理士にご確認ください。</p>
+      </div>
+
+      <!-- 申告種類 -->
+      <div class="form-group full">
+        <label>申告方法（青色申告特別控除）<span class="required"> *</span></label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="filing" value="650000" checked>
+            <span>
+              <span class="radio-option-label">青色申告（65万円控除）</span><br>
+              <span class="radio-option-desc">電子帳簿保存またはe-Taxによる申告 ／ 複式簿記</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="550000">
+            <span>
+              <span class="radio-option-label">青色申告（55万円控除）</span><br>
+              <span class="radio-option-desc">複式簿記 ／ 貸借対照表・損益計算書の添付</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="100000">
+            <span>
+              <span class="radio-option-label">青色申告（10万円控除）</span><br>
+              <span class="radio-option-desc">簡易帳簿</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="0">
+            <span>
+              <span class="radio-option-label">白色申告（控除なし）</span><br>
+              <span class="radio-option-desc">記帳義務あり（簡易記帳でも可）</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="privacy-note">🔒 入力した情報はサーバーへの送信・端末への保存は行われません。計算はすべてブラウザ内で完結します。</p>
+    <button class="btn-calc" onclick="calculate()" aria-label="税金を計算する">計算する →</button>
+    <p id="error-msg" role="alert" style="color:var(--red);font-size:0.85rem;margin-top:0.5rem;display:none;"></p>
+  </div>
+  </section>
+
+  <!-- ── 計算結果 ── -->
+  <section aria-label="計算結果" aria-live="polite">
+  <div id="result-section">
+
+    <!-- サマリーカード -->
+    <div class="summary-hero">
+      <h2>年間 納付税金・社会保険料 合計</h2>
+      <div class="summary-total" id="sum-total">—</div>
+      <div class="summary-note">所得税 ＋ 復興特別所得税 ＋ 住民税 ＋ 個人事業税 ＋ 国民健康保険 ＋ 国民年金</div>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-item-label">事業所得</div>
+          <div class="summary-item-value" id="sum-income">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">実質手取り（概算）</div>
+          <div class="summary-item-value" id="sum-takehome">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">税負担率</div>
+          <div class="summary-item-value" id="sum-rate">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">社会保険料合計</div>
+          <div class="summary-item-value" id="sum-social">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内訳バー -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon" style="background:#f0fdf4;color:#16a34a;">📊</div>
+        収入の内訳
+      </div>
+      <div class="breakdown-bar-wrap">
+        <div class="breakdown-bar" id="breakdown-bar"></div>
+        <div class="bar-legend" id="bar-legend"></div>
+      </div>
+    </div>
+
+    <!-- 税金詳細 -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon" style="background:#f5f3ff;color:#7c3aed;">📋</div>
+        税金・社会保険料の内訳
+      </div>
+      <div class="tax-list" id="tax-list"></div>
+
+      <div class="notice info mt-1" id="consumption-notice" style="display:none;">
+        <span class="notice-icon">ℹ️</span>
+        <span>年間売上が <strong>1,000万円を超えている</strong> ため、消費税の課税事業者となる場合があります。またインボイス登録事業者の場合は売上にかかわらず課税義務が生じます。別途、消費税の申告・納付が必要です。</span>
+      </div>
+
+      <div class="notice warn mt-1">
+        <span class="notice-icon">⚠️</span>
+        <span id="notice-text">
+          この計算は<strong>概算</strong>です。医療費控除・小規模企業共済等掛金控除・配偶者控除など各種控除は考慮していません。国民健康保険料は選択した都道府県の<strong>代表市区町村の令和6年度料率</strong>を参考値として使用しており、実際の料率は居住する区市町村により異なります。実際の税額は税務署・税理士にご確認ください。
+        </span>
+      </div>
+    </div>
+
+  </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section aria-label="よくある質問">
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon" style="background:#f0fdf4;color:#16a34a;">❓</div>
+      <h2 style="font-size:1.05rem;font-weight:600;margin:0;">よくある質問</h2>
+    </div>
+    <dl class="faq-list">
+      <div class="faq-item">
+        <dt class="faq-q">個人事業主が支払う税金の種類は？</dt>
+        <dd class="faq-a">所得税・復興特別所得税（国税）、住民税（地方税）、個人事業税（都道府県税）の3種類が主な税金です。加えて、国民健康保険料と国民年金保険料（社会保険料）も納付する必要があります。</dd>
+      </div>
+      <div class="faq-item">
+        <dt class="faq-q">青色申告と白色申告どちらがお得？</dt>
+        <dd class="faq-a">青色申告は帳簿要件を満たすことで最大65万円の特別控除が受けられるため、節税効果が高くなります。e-Tax申告・電子帳簿保存で65万円、複式簿記なら55万円、簡易帳簿なら10万円の控除です。</dd>
+      </div>
+      <div class="faq-item">
+        <dt class="faq-q">WebエンジニアやSESの個人事業税率は？</dt>
+        <dd class="faq-a">Webエンジニア・プログラマー・SESは原則として請負業（第1種事業・5%）に分類されます。一方、Webデザイナー・グラフィックデザイナーはデザイン業（第3種事業・3%）、ITコンサルタントはコンサルタント業（第3種事業・3%）です。</dd>
+      </div>
+      <div class="faq-item">
+        <dt class="faq-q">個人事業税はいくら以上で課税される？</dt>
+        <dd class="faq-a">事業所得（青色申告特別控除前）が事業主控除290万円を超えた場合に課税されます。年収が少ない場合や農業・林業など一部の業種は非課税です。</dd>
+      </div>
+      <div class="faq-item">
+        <dt class="faq-q">国民健康保険料は都道府県で違う？</dt>
+        <dd class="faq-a">はい、国民健康保険料は市区町村ごとに料率が異なります。このツールでは各都道府県の代表市区町村の令和6年度料率を参考値として使用しています。正確な金額はお住まいの市区町村にご確認ください。</dd>
+      </div>
+    </dl>
+  </div>
+  </section>
+
+  <!-- ── 目安箱・バグ報告 ── -->
+  <div class="card" style="margin-top:0.5rem;">
+    <div class="card-title">
+      <div class="card-title-icon" style="background:#fef9c3;color:#a16207;">📬</div>
+      目安箱・バグ報告
+    </div>
+    <p class="feedback-desc">ご意見・ご要望・バグの報告などをお気軽にどうぞ。<strong>匿名</strong>で送信できます。</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>種類</label>
+        <select id="feedback-type">
+          <option value="💡 ご意見・ご要望">💡 ご意見・ご要望</option>
+          <option value="🐛 バグ報告">🐛 バグ報告</option>
+          <option value="🔢 計算の誤り">🔢 計算の誤り</option>
+          <option value="💬 その他">💬 その他</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:0.875rem;">
+      <label>内容<span class="required"> *</span></label>
+      <textarea id="feedback-body" rows="4" placeholder="内容を入力してください…"></textarea>
+    </div>
+    <button class="btn-feedback" onclick="submitFeedback()">送信する →</button>
+    <div id="feedback-status" class="feedback-status"></div>
+  </div>
+
+</main>
+
+<!-- 管理者パネル（Ctrl+Shift+A で表示） -->
+<div id="admin-wrap" class="admin-wrap" style="display:none;">
+  <div class="admin-panel">
+    <div class="admin-panel-title">🔒 フィードバック管理</div>
+    <div class="admin-panel-sub">Ctrl+Shift+A で表示／非表示を切り替えられます。</div>
+    <div id="admin-list"></div>
+    <div class="admin-actions">
+      <button class="btn-admin-clear" onclick="clearFeedback()">🗑 すべて削除</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>令和6年度（2024年）の税率・料率に基づく概算計算ツールです。<br>
+  正確な申告・納税については税理士または所轄税務署にご相談ください。</p>
+  <p style="margin-top:0.625rem;">🔒 入力された情報はサーバーへの送信・端末への保存は行われません。</p>
+</footer>
+
+<script>
+// ── 所得税速算表 ─────────────────────────────────────────────────────────
+const INCOME_TAX_TABLE = [
+  { limit: 1_950_000,  rate: 0.05, deduction:         0 },
+  { limit: 3_300_000,  rate: 0.10, deduction:    97_500 },
+  { limit: 6_950_000,  rate: 0.20, deduction:   427_500 },
+  { limit: 9_000_000,  rate: 0.23, deduction:   636_000 },
+  { limit: 18_000_000, rate: 0.33, deduction: 1_536_000 },
+  { limit: 40_000_000, rate: 0.40, deduction: 2_796_000 },
+  { limit: Infinity,   rate: 0.45, deduction: 4_796_000 },
+];
+const BASIC_DEDUCTION_IT = 480_000;   // 所得税 基礎控除
+const BASIC_DEDUCTION_RT = 430_000;   // 住民税 基礎控除
+const PENSION_MONTHLY    = 16_980;
+const PENSION_ANNUAL     = PENSION_MONTHLY * 12;  // 203,760円
+const BUSINESS_TAX_DEDUCTION = 2_900_000;         // 個人事業税 事業主控除
+
+// ── 国民健康保険 都道府県別料率（令和6年度 代表市区町村参考値）──────────
+// m=[所得割率, 均等割], s=[後期高齢者支援分], n=[介護分（40〜64歳）]
+// 上限額は全国共通: 医療650万・後期220万・介護170万
+const NHI_PREFECTURES = [
+  { pref:'北海道',  city:'札幌市',    m:[0.0868,49600], s:[0.0293,17200], n:[0.0202,18400] },
+  { pref:'青森県',  city:'青森市',    m:[0.1044,31800], s:[0.0325,10440], n:[0.0238,15480] },
+  { pref:'岩手県',  city:'盛岡市',    m:[0.0964,37800], s:[0.0314,11760], n:[0.0187,14760] },
+  { pref:'宮城県',  city:'仙台市',    m:[0.0818,52680], s:[0.0274,17520], n:[0.0213,18000] },
+  { pref:'秋田県',  city:'秋田市',    m:[0.1004,26400], s:[0.0328, 8640], n:[0.0226,13920] },
+  { pref:'山形県',  city:'山形市',    m:[0.0932,37200], s:[0.0310,12720], n:[0.0200,14160] },
+  { pref:'福島県',  city:'福島市',    m:[0.0928,39600], s:[0.0304,14040], n:[0.0213,15000] },
+  { pref:'茨城県',  city:'水戸市',    m:[0.0911,44400], s:[0.0310,15600], n:[0.0209,17760] },
+  { pref:'栃木県',  city:'宇都宮市',  m:[0.0851,45960], s:[0.0287,15120], n:[0.0205,15600] },
+  { pref:'群馬県',  city:'前橋市',    m:[0.0901,42840], s:[0.0305,15600], n:[0.0207,15960] },
+  { pref:'埼玉県',  city:'さいたま市',m:[0.0880,47520], s:[0.0294,16080], n:[0.0211,17280] },
+  { pref:'千葉県',  city:'千葉市',    m:[0.0920,47760], s:[0.0306,15360], n:[0.0229,16320] },
+  { pref:'東京都',  city:'新宿区',    m:[0.0738,49200], s:[0.0245,16800], n:[0.0173,18000] },
+  { pref:'神奈川県',city:'横浜市',    m:[0.0968,48120], s:[0.0318,16680], n:[0.0253,17280] },
+  { pref:'新潟県',  city:'新潟市',    m:[0.0909,39000], s:[0.0300,12600], n:[0.0219,16200] },
+  { pref:'富山県',  city:'富山市',    m:[0.0866,44200], s:[0.0295,15000], n:[0.0204,15600] },
+  { pref:'石川県',  city:'金沢市',    m:[0.0916,46560], s:[0.0311,15000], n:[0.0225,16320] },
+  { pref:'福井県',  city:'福井市',    m:[0.0861,44400], s:[0.0288,15600], n:[0.0219,15600] },
+  { pref:'山梨県',  city:'甲府市',    m:[0.0956,37200], s:[0.0309,12480], n:[0.0207,14040] },
+  { pref:'長野県',  city:'長野市',    m:[0.0864,42000], s:[0.0288,14400], n:[0.0201,15360] },
+  { pref:'岐阜県',  city:'岐阜市',    m:[0.0870,42000], s:[0.0291,14400], n:[0.0214,15480] },
+  { pref:'静岡県',  city:'静岡市',    m:[0.0857,46800], s:[0.0291,15000], n:[0.0210,15600] },
+  { pref:'愛知県',  city:'名古屋市',  m:[0.0882,47520], s:[0.0298,16080], n:[0.0242,16800] },
+  { pref:'三重県',  city:'津市',      m:[0.0931,42000], s:[0.0315,14280], n:[0.0228,15480] },
+  { pref:'滋賀県',  city:'大津市',    m:[0.0864,46800], s:[0.0291,15600], n:[0.0215,16080] },
+  { pref:'京都府',  city:'京都市',    m:[0.0920,47520], s:[0.0305,15000], n:[0.0225,16440] },
+  { pref:'大阪府',  city:'大阪市',    m:[0.0931,60000], s:[0.0309,20400], n:[0.0227,19200] },
+  { pref:'兵庫県',  city:'神戸市',    m:[0.0866,48600], s:[0.0280,16200], n:[0.0252,17520] },
+  { pref:'奈良県',  city:'奈良市',    m:[0.0920,42000], s:[0.0314,14400], n:[0.0221,14520] },
+  { pref:'和歌山県',city:'和歌山市',  m:[0.0988,38400], s:[0.0321,12600], n:[0.0228,14400] },
+  { pref:'鳥取県',  city:'鳥取市',    m:[0.0950,31600], s:[0.0321,10560], n:[0.0220,13560] },
+  { pref:'島根県',  city:'松江市',    m:[0.0960,30000], s:[0.0310,10560], n:[0.0211,14160] },
+  { pref:'岡山県',  city:'岡山市',    m:[0.0882,44880], s:[0.0294,15000], n:[0.0222,16200] },
+  { pref:'広島県',  city:'広島市',    m:[0.0873,47520], s:[0.0291,15480], n:[0.0248,16800] },
+  { pref:'山口県',  city:'山口市',    m:[0.0923,37800], s:[0.0307,12360], n:[0.0213,14640] },
+  { pref:'徳島県',  city:'徳島市',    m:[0.1002,35400], s:[0.0326,11880], n:[0.0227,14640] },
+  { pref:'香川県',  city:'高松市',    m:[0.0940,39600], s:[0.0313,13560], n:[0.0222,15360] },
+  { pref:'愛媛県',  city:'松山市',    m:[0.0949,38400], s:[0.0311,12600], n:[0.0221,15000] },
+  { pref:'高知県',  city:'高知市',    m:[0.1026,36000], s:[0.0328,12000], n:[0.0236,14520] },
+  { pref:'福岡県',  city:'福岡市',    m:[0.0905,50040], s:[0.0285,16320], n:[0.0232,17760] },
+  { pref:'佐賀県',  city:'佐賀市',    m:[0.0967,37200], s:[0.0314,12720], n:[0.0215,14640] },
+  { pref:'長崎県',  city:'長崎市',    m:[0.1016,34800], s:[0.0324,11520], n:[0.0238,14640] },
+  { pref:'熊本県',  city:'熊本市',    m:[0.0941,45000], s:[0.0309,15000], n:[0.0219,16560] },
+  { pref:'大分県',  city:'大分市',    m:[0.0944,40440], s:[0.0308,13560], n:[0.0221,15480] },
+  { pref:'宮崎県',  city:'宮崎市',    m:[0.0971,36000], s:[0.0316,12000], n:[0.0223,14400] },
+  { pref:'鹿児島県',city:'鹿児島市',  m:[0.0949,41400], s:[0.0311,13560], n:[0.0232,15600] },
+  { pref:'沖縄県',  city:'那覇市',    m:[0.1031,36600], s:[0.0328,12240], n:[0.0229,14880] },
+];
+const NHI_CAP = { m: 650_000, s: 220_000, n: 170_000 };  // 全国共通上限
+
+// ── 目安箱・フィードバック ────────────────────────────────────────────────
+function submitFeedback() {
+  const type   = document.getElementById('feedback-type').value;
+  const body   = document.getElementById('feedback-body').value.trim();
+  const status = document.getElementById('feedback-status');
+
+  if (!body) {
+    status.className = 'feedback-status error';
+    status.textContent = '内容を入力してください。';
+    return;
+  }
+
+  const entry = {
+    id: Date.now(),
+    type,
+    body,
+    timestamp: new Date().toLocaleString('ja-JP', {
+      year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit'
+    }),
+  };
+
+  const list = JSON.parse(localStorage.getItem('calc_feedback') || '[]');
+  list.push(entry);
+  localStorage.setItem('calc_feedback', JSON.stringify(list));
+
+  document.getElementById('feedback-body').value = '';
+  status.className = 'feedback-status success';
+  status.textContent = '✅ 送信しました。ありがとうございます！';
+  setTimeout(() => { status.textContent = ''; status.className = 'feedback-status'; }, 4000);
+}
+
+function renderAdminView() {
+  const list = JSON.parse(localStorage.getItem('calc_feedback') || '[]').reverse();
+  const el   = document.getElementById('admin-list');
+  if (list.length === 0) {
+    el.innerHTML = '<p class="admin-empty">まだ投稿はありません。</p>';
+    return;
+  }
+  el.innerHTML = list.map(e => `
+    <div class="admin-entry">
+      <div class="admin-entry-meta">
+        <span class="admin-entry-type">${e.type}</span>
+        <span class="admin-entry-time">${e.timestamp}</span>
+      </div>
+      <div class="admin-entry-body">${e.body.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    </div>
+  `).join('');
+}
+
+function clearFeedback() {
+  if (!confirm('すべてのフィードバックを削除しますか？')) return;
+  localStorage.removeItem('calc_feedback');
+  renderAdminView();
+}
+
+// Ctrl+Shift+A で管理パネル切り替え
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+    const wrap = document.getElementById('admin-wrap');
+    const show = wrap.style.display === 'none';
+    wrap.style.display = show ? 'block' : 'none';
+    if (show) renderAdminView();
+  }
+});
+
+// ── 金額プレビュー ────────────────────────────────────────────────────────
+function toJPYLabel(val) {
+  const n = Math.round(parseFloat(val));
+  if (!n || n <= 0) return '';
+  const oku     = Math.floor(n / 100_000_000);
+  const afterOku = n % 100_000_000;
+  const man     = Math.floor(afterOku / 10_000);
+  const rem     = afterOku % 10_000;
+  if (oku === 0 && man === 0) return n.toLocaleString('ja-JP') + '円';
+  let s = '';
+  if (oku > 0) s += oku.toLocaleString('ja-JP') + '億';
+  if (man > 0) s += man.toLocaleString('ja-JP') + '万';
+  if (rem > 0) s += rem.toLocaleString('ja-JP');
+  return s + '円';
+}
+function updatePreview(inputId, previewId) {
+  document.getElementById(previewId).textContent = toJPYLabel(document.getElementById(inputId).value);
+}
+
+// ── ユーティリティ ────────────────────────────────────────────────────────
+const fmt   = (n) => Math.round(n).toLocaleString('ja-JP') + '円';
+const fmtNo = (n) => Math.round(n).toLocaleString('ja-JP');
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+function calcIncomeTax(taxable) {
+  if (taxable <= 0) return 0;
+  for (const b of INCOME_TAX_TABLE) {
+    if (taxable <= b.limit) return Math.floor(taxable * b.rate - b.deduction);
+  }
+}
+
+// ── メイン計算 ────────────────────────────────────────────────────────────
+function calculate() {
+  const revenue    = parseFloat(document.getElementById('revenue').value) || 0;
+  const expenses   = parseFloat(document.getElementById('expenses').value) || 0;
+  const age        = document.getElementById('age').value;
+  const bizRate    = parseFloat(document.getElementById('business-type').value);
+  const filing     = parseFloat(document.querySelector('input[name=filing]:checked').value);
+  const prefecture = document.getElementById('prefecture').value;
+
+  const errEl = document.getElementById('error-msg');
+  if (!document.getElementById('revenue').value || !document.getElementById('expenses').value) {
+    errEl.textContent = '売上と経費を入力してください。';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = expenses > revenue ? 'block' : 'none';
+  if (expenses > revenue) errEl.textContent = '経費が売上を上回っています（赤字の場合、所得税・住民税は0円です）。';
+
+  // 都道府県データ取得
+  const nhiData = NHI_PREFECTURES.find(p => p.pref === prefecture) || NHI_PREFECTURES[12];
+
+  // ① 事業所得
+  const incomeBeforeDeduction = Math.max(0, revenue - expenses);       // 青色控除前
+  const businessIncome        = Math.max(0, incomeBeforeDeduction - filing);  // 青色控除後
+
+  // ② 個人事業税（青色申告特別控除は適用しない）
+  let bizTax = 0;
+  if (bizRate > 0) {
+    const bizTaxBase = Math.max(0, incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION);
+    bizTax = Math.floor(bizTaxBase * (bizRate / 100));
+  }
+
+  // ③ 国民年金（65歳以上は第1号被保険者でないため0）
+  const pension = age === 'over65' ? 0 : PENSION_ANNUAL;
+
+  // ④ 国民健康保険（基準額 = 事業所得 − 住民税基礎控除43万）
+  const nhiBase    = Math.max(0, businessIncome - BASIC_DEDUCTION_RT);
+  const nhiMedical = clamp(Math.floor(nhiBase * nhiData.m[0]) + nhiData.m[1], nhiData.m[1], NHI_CAP.m);
+  const nhiSupport = clamp(Math.floor(nhiBase * nhiData.s[0]) + nhiData.s[1], nhiData.s[1], NHI_CAP.s);
+  const nhiNursing = age === '40to64'
+    ? clamp(Math.floor(nhiBase * nhiData.n[0]) + nhiData.n[1], nhiData.n[1], NHI_CAP.n)
+    : 0;
+  const nhiTotal   = nhiMedical + nhiSupport + nhiNursing;
+
+  // ⑤ 社会保険料控除
+  const socialDeduction = nhiTotal + pension;
+
+  // ⑥ 所得税
+  const taxableForIT  = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_IT);
+  const incomeTax     = calcIncomeTax(taxableForIT);
+  const specialTax    = Math.floor(incomeTax * 0.021);
+  const incomeTaxTotal = incomeTax + specialTax;
+
+  // ⑦ 住民税（全国共通：所得割10% + 均等割5,000円 + 森林環境税1,000円）
+  const taxableForRT       = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_RT);
+  const residentIncomeLevy = Math.floor(taxableForRT * 0.10);
+  const residentFlatLevy   = taxableForRT > 0 ? 5_000 : 0;
+  const forestTax          = taxableForRT > 0 ? 1_000 : 0;
+  const residentTotal      = residentIncomeLevy + residentFlatLevy + forestTax;
+
+  // ⑧ 合計
+  const grandTotal = incomeTaxTotal + residentTotal + bizTax + nhiTotal + pension;
+  const takeHome   = revenue - expenses - grandTotal;
+  const totalRate  = incomeBeforeDeduction > 0
+    ? ((grandTotal / incomeBeforeDeduction) * 100).toFixed(1) : '0.0';
+
+  // ── 描画 ──
+  document.getElementById('sum-total').textContent    = fmt(grandTotal);
+  document.getElementById('sum-income').textContent   = fmt(businessIncome);
+  document.getElementById('sum-takehome').textContent = fmt(Math.max(0, takeHome));
+  document.getElementById('sum-rate').textContent     = totalRate + '%';
+  document.getElementById('sum-social').textContent   = fmt(nhiTotal + pension);
+  document.getElementById('consumption-notice').style.display = revenue > 10_000_000 ? 'flex' : 'none';
+
+  renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome);
+  renderTaxList({
+    revenue, expenses, filing, businessIncome, incomeBeforeDeduction,
+    bizTax, bizRate,
+    nhiMedical, nhiSupport, nhiNursing, nhiTotal,
+    nhiBase, nhiData, nhiCity: nhiData.city, nhiPref: prefecture,
+    pension, age,
+    incomeTax, specialTax, incomeTaxTotal,
+    taxableForIT, taxableForRT,
+    residentIncomeLevy, residentFlatLevy, forestTax, residentTotal,
+    socialDeduction, grandTotal,
+  });
+
+  const section = document.getElementById('result-section');
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── 内訳バー ──────────────────────────────────────────────────────────────
+function renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome) {
+  if (revenue === 0) return;
+  const pct = (v) => Math.max(0, v / revenue * 100).toFixed(2) + '%';
+  const segments = [
+    { label: '手取り',       value: Math.max(0, takeHome), color: '#16a34a' },
+    { label: '税金・社保',   value: grandTotal,              color: '#2563eb' },
+    { label: '経費',         value: expenses,                color: '#94a3b8' },
+    { label: '青色申告控除', value: Math.min(filing, Math.max(0, revenue - expenses)), color: '#c4b5fd' },
+  ].filter(s => s.value > 0);
+
+  document.getElementById('breakdown-bar').innerHTML = segments.map(s =>
+    `<div class="bar-seg" style="width:${pct(s.value)};background:${s.color}" title="${s.label}: ${fmt(s.value)}"></div>`
+  ).join('');
+  document.getElementById('bar-legend').innerHTML = segments.map(s =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div>${s.label}（${fmt(s.value)}）</div>`
+  ).join('');
+}
+
+// ── 税金リスト ────────────────────────────────────────────────────────────
+function renderTaxList(d) {
+  const filingLabel = d.filing === 650_000 ? '青色65万円控除'
+    : d.filing === 550_000 ? '青色55万円控除'
+    : d.filing === 100_000 ? '青色10万円控除'
+    : '白色申告（控除なし）';
+
+  const mRate = (d.nhiData.m[0] * 100).toFixed(2);
+  const sRate = (d.nhiData.s[0] * 100).toFixed(2);
+  const nRate = (d.nhiData.n[0] * 100).toFixed(2);
+  const mFlat = fmtNo(d.nhiData.m[1]);
+  const sFlat = fmtNo(d.nhiData.s[1]);
+  const nFlat = fmtNo(d.nhiData.n[1]);
+
+  const items = [
+
+    // 所得税
+    {
+      theme: 'theme-blue', icon: '🏛️', name: '所得税', sub: '国税',
+      amount: d.incomeTaxTotal,
+      rows: [
+        { label: '売上',       value: fmt(d.revenue) },
+        { label: '経費',       value: `▲${fmt(d.expenses)}`, cls: 'minus' },
+        { label: filingLabel,  value: `▲${fmt(d.filing)}`,   cls: 'minus' },
+        { label: '事業所得',   value: fmt(d.businessIncome) },
+        { label: '社会保険料控除（国民健康保険 + 年金）', value: `▲${fmt(d.socialDeduction)}`, cls: 'minus' },
+        { label: '基礎控除',   value: `▲${fmt(BASIC_DEDUCTION_IT)}`, cls: 'minus' },
+        { label: '課税所得',   value: fmt(d.taxableForIT) },
+        { label: '所得税',     value: fmt(d.incomeTax) },
+        { label: '復興特別所得税（所得税 × 2.1%）', value: fmt(d.specialTax) },
+        { label: '所得税 合計', value: fmt(d.incomeTaxTotal), subtotal: true },
+      ],
+    },
+
+    // 住民税
+    {
+      theme: 'theme-purple', icon: '🗼', name: '住民税', sub: `${d.nhiPref}・各区市町村`,
+      amount: d.residentTotal,
+      rows: [
+        { label: '事業所得',   value: fmt(d.businessIncome) },
+        { label: '社会保険料控除（国民健康保険 + 年金）', value: `▲${fmt(d.socialDeduction)}`, cls: 'minus' },
+        { label: '基礎控除（住民税）', value: `▲${fmt(BASIC_DEDUCTION_RT)}`, cls: 'minus' },
+        { label: '課税所得（住民税）', value: fmt(d.taxableForRT) },
+        { label: '所得割（10%：都道府県4% + 市区町村6%）', value: fmt(d.residentIncomeLevy) },
+        { label: `均等割（都道府県1,500円 + 市区町村3,500円）`,
+          value: d.residentFlatLevy > 0 ? fmt(d.residentFlatLevy) : '0円（非課税）' },
+        { label: '森林環境税（国税・住民税と同時徴収）',
+          value: d.forestTax > 0 ? fmt(d.forestTax) : '0円' },
+        { label: '住民税 合計', value: fmt(d.residentTotal), subtotal: true },
+      ],
+    },
+
+    // 個人事業税
+    {
+      theme: 'theme-orange', icon: '🏢', name: '個人事業税', sub: '都道府県税（全国共通税率）',
+      amount: d.bizTax,
+      rows: d.bizRate === 0 ? [
+        { label: '業種', value: '非課税業種のため課税なし' },
+        { label: '個人事業税 合計', value: '0円', subtotal: true },
+      ] : [
+        { label: '事業所得（青色申告特別控除前）', value: fmt(d.incomeBeforeDeduction) },
+        { label: '事業主控除', value: `▲${fmt(BUSINESS_TAX_DEDUCTION)}`, cls: 'minus' },
+        { label: '課税標準', value: fmt(Math.max(0, d.incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION)) },
+        { label: `税率（第${d.bizRate===5?'1':d.bizRate===4?'2':'3'}種事業）`, value: `${d.bizRate}%` },
+        { label: '個人事業税 合計', value: fmt(d.bizTax), subtotal: true },
+      ],
+    },
+
+    // 国民健康保険
+    {
+      theme: 'theme-green', icon: '🏥', name: '国民健康保険',
+      sub: `${d.nhiCity} 令和6年度料率（参考値）`,
+      amount: d.nhiTotal,
+      rows: [
+        { label: `計算基準額（事業所得 − 住民税基礎控除43万）`, value: fmt(d.nhiBase) },
+        { label: `医療分（所得割${mRate}% + 均等割${mFlat}円、上限65万）`, value: fmt(d.nhiMedical) },
+        { label: `後期高齢者支援分（所得割${sRate}% + 均等割${sFlat}円、上限22万）`, value: fmt(d.nhiSupport) },
+        d.age === '40to64'
+          ? { label: `介護分（所得割${nRate}% + 均等割${nFlat}円、上限17万）`, value: fmt(d.nhiNursing) }
+          : { label: '介護分', value: d.age === 'under40' ? '40歳未満のため非該当' : '65歳以上は別制度（市区町村）' },
+        { label: '国民健康保険料 合計', value: fmt(d.nhiTotal), subtotal: true },
+      ],
+    },
+
+    // 国民年金
+    {
+      theme: 'theme-yellow', icon: '🔰', name: '国民年金保険料', sub: '令和6年度',
+      amount: d.pension,
+      rows: d.age === 'over65' ? [
+        { label: '65歳以上は第1号被保険者でないため納付なし', value: '—' },
+        { label: '国民年金保険料 合計', value: '0円', subtotal: true },
+      ] : [
+        { label: '月額', value: fmt(PENSION_MONTHLY) },
+        { label: '× 12ヶ月', value: '' },
+        { label: '国民年金保険料 合計', value: fmt(d.pension), subtotal: true },
+      ],
+    },
+  ];
+
+  document.getElementById('tax-list').innerHTML = items.map(item => `
+    <div class="tax-item ${item.theme}">
+      <div class="tax-item-header">
+        <div class="tax-item-left">
+          <div class="tax-item-icon">${item.icon}</div>
+          <div>
+            <div class="tax-item-name">${item.name}</div>
+            <div class="tax-item-sub">${item.sub}</div>
+          </div>
+        </div>
+        <div class="tax-item-amount">${fmt(item.amount)}</div>
+      </div>
+      <div class="tax-item-body">
+        <div class="detail-rows">
+          ${item.rows.map(r => `
+            <div class="dr ${r.subtotal ? 'subtotal' : ''}">
+              <span>${r.label}</span>
+              <span class="v ${r.cls || ''}">${r.value}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
