@@ -709,8 +709,9 @@ textarea:focus {
       <div class="form-group full">
         <label>業種（個人事業税の税率に影響）<span class="required"> *</span></label>
         <select id="business-type" autocomplete="off">
+          <option value="" selected disabled>― 業種を選択してください ―</option>
           <optgroup label="🖥️ IT・エンジニア系">
-            <option value="5" selected>Webエンジニア・プログラマー・システム開発（請負業｜第1種 5%）</option>
+            <option value="5">Webエンジニア・プログラマー・システム開発（請負業｜第1種 5%）</option>
             <option value="5">SES・システムエンジニアリングサービス（請負業｜第1種 5%）</option>
             <option value="5">アプリ開発・ソフトウェア開発（請負業｜第1種 5%）</option>
             <option value="5">インフラエンジニア・ネットワーク構築（請負業｜第1種 5%）</option>
@@ -1236,6 +1237,11 @@ function calculate() {
   const errEl = document.getElementById('error-msg');
   if (!document.getElementById('revenue').value || !document.getElementById('expenses').value) {
     errEl.textContent = '売上と経費を入力してください。';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (document.getElementById('business-type').value === '') {
+    errEl.textContent = '業種を選択してください。';
     errEl.style.display = 'block';
     return;
   }
