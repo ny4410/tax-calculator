@@ -1485,11 +1485,20 @@ function calculate() {
   const pension = age === 'over65' ? 0 : PENSION_ANNUAL;
 
   // ④ 国民健康保険（基準額 = 事業所得 − 住民税基礎控除43万）
+  // 均等割 軽減判定（令和6年度・単身事業者・給与所得なし基準）
+  // 7割軽減: 事業所得≤43万 / 5割軽減: ≤72万 / 2割軽減: ≤96.5万
+  const nhiFlatMult = businessIncome <= 430_000 ? 0.3
+    : businessIncome <= 720_000 ? 0.5
+    : businessIncome <= 965_000 ? 0.8
+    : 1.0;
   const nhiBase    = Math.max(0, businessIncome - BASIC_DEDUCTION_RT);
-  const nhiMedical = clamp(Math.floor(nhiBase * nhiData.m[0]) + nhiData.m[1], nhiData.m[1], NHI_CAP.m);
-  const nhiSupport = clamp(Math.floor(nhiBase * nhiData.s[0]) + nhiData.s[1], nhiData.s[1], NHI_CAP.s);
+  const mFlatRed   = Math.floor(nhiData.m[1] * nhiFlatMult);
+  const sFlatRed   = Math.floor(nhiData.s[1] * nhiFlatMult);
+  const nFlatRed   = Math.floor(nhiData.n[1] * nhiFlatMult);
+  const nhiMedical = clamp(Math.floor(nhiBase * nhiData.m[0]) + mFlatRed, mFlatRed, NHI_CAP.m);
+  const nhiSupport = clamp(Math.floor(nhiBase * nhiData.s[0]) + sFlatRed, sFlatRed, NHI_CAP.s);
   const nhiNursing = age === '40to64'
-    ? clamp(Math.floor(nhiBase * nhiData.n[0]) + nhiData.n[1], nhiData.n[1], NHI_CAP.n)
+    ? clamp(Math.floor(nhiBase * nhiData.n[0]) + nFlatRed, nFlatRed, NHI_CAP.n)
     : 0;
   const nhiTotal   = nhiMedical + nhiSupport + nhiNursing;
 
@@ -1574,6 +1583,7 @@ function calculate() {
     bizTax, bizRate, bizTaxBase,
     nhiMedical, nhiSupport, nhiNursing, nhiTotal,
     nhiBase, nhiData, nhiCity: nhiData.city, nhiPref: prefecture,
+    nhiFlatMult, mFlatRed, sFlatRed, nFlatRed,
     pension, age,
     incomeTax, specialTax, incomeTaxTotal,
     taxableForIT, taxableForRT,
@@ -1589,7 +1599,9 @@ function calculate() {
 // ── 内訳バー ──────────────────────────────────────────────────────────────
 function renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome) {
   if (revenue === 0) return;
-  const pct = (v) => Math.max(0, v / revenue * 100).toFixed(2) + '%';
+  // 赤字（経費>売上）時はバーが100%超えないよう全支出合計を分母にして正規化
+  const base = Math.max(revenue, expenses + grandTotal);
+  const pct = (v) => Math.max(0, v / base * 100).toFixed(2) + '%';
   const segments = [
     { label: '手取り',       value: Math.max(0, takeHome), color: '#16a34a' },
     { label: '税金・社保',   value: grandTotal,              color: '#2563eb' },
@@ -1618,9 +1630,14 @@ function renderTaxList(d) {
   const mRate = (d.nhiData.m[0] * 100).toFixed(2);
   const sRate = (d.nhiData.s[0] * 100).toFixed(2);
   const nRate = (d.nhiData.n[0] * 100).toFixed(2);
-  const mFlat = fmtNo(d.nhiData.m[1]);
-  const sFlat = fmtNo(d.nhiData.s[1]);
-  const nFlat = fmtNo(d.nhiData.n[1]);
+  const mFlat = fmtNo(d.mFlatRed);
+  const sFlat = fmtNo(d.sFlatRed);
+  const nFlat = fmtNo(d.nFlatRed);
+  // 軽減区分ラベル
+  const nhiReducLabel = d.nhiFlatMult === 0.3 ? '均等割 7割軽減（世帯所得43万円以下・単身）'
+    : d.nhiFlatMult === 0.5 ? '均等割 5割軽減（世帯所得72万円以下・単身）'
+    : d.nhiFlatMult === 0.8 ? '均等割 2割軽減（世帯所得96.5万円以下・単身）'
+    : null;
 
   const items = [
 
@@ -1682,7 +1699,8 @@ function renderTaxList(d) {
       sub: `${d.nhiCity} 令和6年度料率（参考値）`,
       amount: d.nhiTotal,
       rows: [
-        { label: `計算基準額（事業所得 − 住民税基礎控除43万）`, value: fmt(d.nhiBase) },
+        { label: '計算基準額（事業所得 − 住民税基礎控除43万）', value: fmt(d.nhiBase) },
+        ...(nhiReducLabel ? [{ label: nhiReducLabel, value: `${Math.round((1 - d.nhiFlatMult) * 10)}割軽減適用`, cls: 'minus' }] : []),
         { label: `医療分（所得割${mRate}% + 均等割${mFlat}円、上限65万）`, value: fmt(d.nhiMedical) },
         { label: `後期高齢者支援分（所得割${sRate}% + 均等割${sFlat}円、上限22万）`, value: fmt(d.nhiSupport) },
         d.age === '40to64'
