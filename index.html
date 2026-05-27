@@ -9,13 +9,27 @@
      crossorigin="anonymous"></script>
 
 <!-- ── Google Analytics（GA4） ────────────────────────────── -->
+<!-- オーナー自己アクセス除外: ?ga_opt_out=1 で除外ON / ?ga_opt_in=1 で解除 -->
+<script>
+  (function() {
+    var q = location.search;
+    if (q.indexOf('ga_opt_out=1') !== -1) {
+      localStorage.setItem('ga_exclude_owner', '1');
+    } else if (q.indexOf('ga_opt_in=1') !== -1) {
+      localStorage.removeItem('ga_exclude_owner');
+    }
+    if (localStorage.getItem('ga_exclude_owner') === '1') {
+      window['ga-disable-G-430SVZE0TQ'] = true;
+    }
+  })();
+</script>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-430SVZEOTQ"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-430SVZE0TQ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-430SVZEOTQ');
+  gtag('config', 'G-430SVZE0TQ');
 </script>
 
 <!-- ── 基本SEOメタ ─────────────────────────────────────── -->
@@ -1180,6 +1194,13 @@ textarea:focus {
       <button class="btn-admin-clear" onclick="clearFeedback()">🗑 すべて削除</button>
     </div>
   </div>
+  <div class="admin-panel" style="margin-top:0.75rem;">
+    <div class="admin-panel-title">📊 GA4 自己アクセス除外</div>
+    <div class="admin-panel-sub" id="ga-exclude-status"></div>
+    <div class="admin-actions" style="margin-top:0.625rem;">
+      <button class="btn-admin-clear" id="ga-exclude-btn" onclick="toggleGaExclude()"></button>
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -1316,13 +1337,32 @@ function clearFeedback() {
   renderAdminView();
 }
 
+function renderGaStatus() {
+  const excluded = localStorage.getItem('ga_exclude_owner') === '1';
+  document.getElementById('ga-exclude-status').textContent =
+    excluded ? '🔴 現在このブラウザのアクセスはGA4から除外されています。' : '🟢 現在このブラウザのアクセスはGA4で計測されています。';
+  const btn = document.getElementById('ga-exclude-btn');
+  btn.textContent = excluded ? '✅ 計測を再開する（除外を解除）' : '🚫 自分のアクセスをGA4から除外する';
+}
+
+function toggleGaExclude() {
+  const excluded = localStorage.getItem('ga_exclude_owner') === '1';
+  if (excluded) {
+    localStorage.removeItem('ga_exclude_owner');
+  } else {
+    localStorage.setItem('ga_exclude_owner', '1');
+  }
+  renderGaStatus();
+  alert(excluded ? 'GA4計測を再開しました。次回訪問から計測されます。' : 'GA4除外を設定しました。このブラウザのアクセスは計測されません。（即時反映には再読み込みが必要です）');
+}
+
 // Ctrl+Shift+A で管理パネル切り替え
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') {
     const wrap = document.getElementById('admin-wrap');
     const show = wrap.style.display === 'none';
     wrap.style.display = show ? 'block' : 'none';
-    if (show) renderAdminView();
+    if (show) { renderAdminView(); renderGaStatus(); }
   }
 });
 
