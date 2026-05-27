@@ -1410,10 +1410,13 @@ function calculate() {
   const businessIncome        = Math.max(0, incomeBeforeDeduction - filing);  // 青色控除後
 
   // ② 個人事業税（青色申告特別控除は適用しない）
+  // 課税標準：千円未満切り捨て（地方税法）/ 税額：百円未満切り捨て（地方税法）
   let bizTax = 0;
+  let bizTaxBase = 0;
   if (bizRate > 0) {
-    const bizTaxBase = Math.max(0, incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION);
-    bizTax = Math.floor(bizTaxBase * (bizRate / 100));
+    const rawBase = Math.max(0, incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION);
+    bizTaxBase = Math.floor(rawBase / 1000) * 1000;
+    bizTax     = Math.floor(bizTaxBase * (bizRate / 100) / 100) * 100;
   }
 
   // ③ 国民年金（65歳以上は第1号被保険者でないため0）
@@ -1440,8 +1443,11 @@ function calculate() {
   // ⑦ 住民税（全国共通：所得割10% + 均等割5,000円 + 森林環境税1,000円）
   const taxableForRT       = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_RT);
   const residentIncomeLevy = Math.floor(taxableForRT * 0.10);
-  const residentFlatLevy   = taxableForRT > 0 ? 5_000 : 0;
-  const forestTax          = taxableForRT > 0 ? 1_000 : 0;
+  // 均等割・森林環境税：合計所得金額（事業所得）が45万円超で課税（単身者基準の近似）
+  // taxableForRT > 0 では、社会保険料が高い場合に均等割が消えるため businessIncome で判定する
+  const isResidentTaxable  = businessIncome > 450_000;
+  const residentFlatLevy   = isResidentTaxable ? 5_000 : 0;
+  const forestTax          = isResidentTaxable ? 1_000 : 0;
   const residentTotal      = residentIncomeLevy + residentFlatLevy + forestTax;
 
   // ⑧ 合計
@@ -1503,7 +1509,7 @@ function calculate() {
   renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome);
   renderTaxList({
     revenue, expenses, filing, businessIncome, incomeBeforeDeduction,
-    bizTax, bizRate,
+    bizTax, bizRate, bizTaxBase,
     nhiMedical, nhiSupport, nhiNursing, nhiTotal,
     nhiBase, nhiData, nhiCity: nhiData.city, nhiPref: prefecture,
     pension, age,
@@ -1602,9 +1608,9 @@ function renderTaxList(d) {
       ] : [
         { label: '事業所得（青色申告特別控除前）', value: fmt(d.incomeBeforeDeduction) },
         { label: '事業主控除', value: `▲${fmt(BUSINESS_TAX_DEDUCTION)}`, cls: 'minus' },
-        { label: '課税標準', value: fmt(Math.max(0, d.incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION)) },
+        { label: '課税標準（千円未満切捨）', value: fmt(d.bizTaxBase) },
         { label: `税率（第${d.bizRate===5?'1':d.bizRate===4?'2':'3'}種事業）`, value: `${d.bizRate}%` },
-        { label: '個人事業税 合計', value: fmt(d.bizTax), subtotal: true },
+        { label: '個人事業税 合計（百円未満切捨）', value: fmt(d.bizTax), subtotal: true },
       ],
     },
 
