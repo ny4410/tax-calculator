@@ -888,7 +888,7 @@ textarea:focus {
         消費税（概算）
       </div>
       <div id="consumption-detail"></div>
-      <p style="font-size:0.775rem;color:var(--text-muted);margin-top:0.75rem;">※ 売上・経費をすべて税込で入力している場合の概算です。実際の納付額は税理士または税務署にご確認ください。</p>
+      <p style="font-size:0.775rem;color:var(--text-muted);margin-top:0.75rem;">※ 売上・経費をすべて税抜で入力している場合の概算です。実際の納付額は税理士または税務署にご確認ください。</p>
     </div>
 
     <!-- 内訳バー -->
@@ -1222,6 +1222,7 @@ function calcIncomeTax(taxable) {
   for (const b of INCOME_TAX_TABLE) {
     if (taxable <= b.limit) return Math.floor(taxable * b.rate - b.deduction);
   }
+  return 0; // フォールバック（Infinityバケットで通常到達しない）
 }
 
 // ── メイン計算 ────────────────────────────────────────────────────────────
@@ -1296,16 +1297,21 @@ function calculate() {
   const totalRate  = incomeBeforeDeduction > 0
     ? ((grandTotal / incomeBeforeDeduction) * 100).toFixed(1) : '0.0';
 
+  // ── 消費税概算（描画前に計算） ──
+  // 入力は税抜のため: 消費税 = 税抜金額 × 10%
+  let consumptionTax = 0;
+  const salesTax    = Math.floor(revenue  * 0.10);  // 売上消費税（税抜売上 × 10%）
+  const purchaseTax = Math.floor(expenses * 0.10);  // 仕入消費税（税抜経費 × 10%）
+
   // ── 描画 ──
   document.getElementById('sum-total').textContent    = fmt(grandTotal);
   document.getElementById('sum-income').textContent   = fmt(businessIncome);
-  document.getElementById('sum-takehome').textContent = fmt(Math.max(0, takeHome));
   document.getElementById('sum-rate').textContent     = totalRate + '%';
   document.getElementById('sum-social').textContent   = fmt(nhiTotal + pension);
-  // ── 消費税概算 ──
-  let consumptionTax = 0;
-  const salesTax = Math.floor(revenue * 10 / 110);       // 売上に含まれる消費税
-  const purchaseTax = Math.floor(expenses * 10 / 110);   // 経費に含まれる消費税（仕入税額控除の近似）
+
+  const consumptionCard   = document.getElementById('consumption-card');
+  const consumptionDetail = document.getElementById('consumption-detail');
+  const consumptionNotice = document.getElementById('consumption-notice');
 
   if (consumptionType === 'invoice2wari') {
     consumptionTax = Math.floor(salesTax * 0.20);
@@ -1313,9 +1319,8 @@ function calculate() {
     consumptionTax = Math.max(0, salesTax - purchaseTax);
   }
 
-  const consumptionCard   = document.getElementById('consumption-card');
-  const consumptionDetail = document.getElementById('consumption-detail');
-  const consumptionNotice = document.getElementById('consumption-notice');
+  // 手取り（消費税納付分を差し引いた実質手取り）
+  document.getElementById('sum-takehome').textContent = fmt(Math.max(0, takeHome - consumptionTax));
 
   if (consumptionType === 'exempt') {
     consumptionCard.style.display = 'none';
@@ -1330,13 +1335,13 @@ function calculate() {
 
     if (consumptionType === 'invoice2wari') {
       consumptionDetail.innerHTML = `
-        <div class="tax-row"><span class="tax-row-label">売上に含まれる消費税（税込売上 × 10/110）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
+        <div class="tax-row"><span class="tax-row-label">売上消費税（税抜売上 × 10%）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
         <div class="tax-row"><span class="tax-row-label">2割特例 納付額（売上消費税 × 20%）</span><span class="tax-row-value" style="color:var(--orange);font-weight:700;">${fmt(consumptionTax)}</span></div>
         <div class="tax-row" style="margin-top:0.5rem;"><span class="tax-row-label" style="font-size:0.8rem;color:var(--text-muted);">※ 2割特例は令和8年9月申告分まで。以降は原則課税または簡易課税に移行</span><span></span></div>`;
     } else {
       consumptionDetail.innerHTML = `
-        <div class="tax-row"><span class="tax-row-label">売上消費税（税込売上 × 10/110）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
-        <div class="tax-row"><span class="tax-row-label">仕入消費税・経費分（税込経費 × 10/110）</span><span class="tax-row-value minus">▲${fmt(purchaseTax)}</span></div>
+        <div class="tax-row"><span class="tax-row-label">売上消費税（税抜売上 × 10%）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
+        <div class="tax-row"><span class="tax-row-label">仕入消費税・経費分（税抜経費 × 10%）</span><span class="tax-row-value minus">▲${fmt(purchaseTax)}</span></div>
         <div class="tax-row subtotal"><span class="tax-row-label">消費税 納付額（概算）</span><span class="tax-row-value" style="color:var(--orange);font-weight:700;">${fmt(consumptionTax)}</span></div>
         <div class="tax-row" style="margin-top:0.5rem;"><span class="tax-row-label" style="font-size:0.8rem;color:var(--text-muted);">※ 人件費・給与等の非課税経費は仕入税額控除の対象外のため実際の納付額と異なる場合があります</span><span></span></div>`;
     }
@@ -1368,7 +1373,6 @@ function renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome) {
     { label: '手取り',       value: Math.max(0, takeHome), color: '#16a34a' },
     { label: '税金・社保',   value: grandTotal,              color: '#2563eb' },
     { label: '経費',         value: expenses,                color: '#94a3b8' },
-    { label: '青色申告控除', value: Math.min(filing, Math.max(0, revenue - expenses)), color: '#c4b5fd' },
   ].filter(s => s.value > 0);
 
   document.getElementById('breakdown-bar').innerHTML = segments.map(s =>
