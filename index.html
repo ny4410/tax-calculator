@@ -780,6 +780,34 @@ textarea:focus {
         <p class="hint">※ 業種の分類が不明な場合は、所轄の都道府県税事務所または税理士にご確認ください。</p>
       </div>
 
+      <!-- 消費税の区分 -->
+      <div class="form-group full">
+        <label>消費税の区分</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="consumption" value="exempt" checked>
+            <span>
+              <span class="radio-option-label">免税事業者</span><br>
+              <span class="radio-option-desc">前々年の課税売上が1,000万円以下・インボイス未登録</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="consumption" value="invoice2wari">
+            <span>
+              <span class="radio-option-label">インボイス登録済（2割特例）</span><br>
+              <span class="radio-option-desc">令和5年10月〜令和8年9月の経過措置。売上消費税の20%のみ納付</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="consumption" value="taxable">
+            <span>
+              <span class="radio-option-label">課税事業者（原則課税）</span><br>
+              <span class="radio-option-desc">売上消費税から仕入消費税を控除した額を納付（概算）</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
       <!-- 申告種類 -->
       <div class="form-group full">
         <label>申告方法（青色申告特別控除）<span class="required"> *</span></label>
@@ -852,6 +880,16 @@ textarea:focus {
       </div>
     </div>
 
+    <!-- 消費税概算カード（課税事業者選択時のみ表示） -->
+    <div class="card" id="consumption-card" style="display:none;">
+      <div class="card-title">
+        <div class="card-title-icon" style="background:#fff7ed;color:#ea580c;">🧾</div>
+        消費税（概算）
+      </div>
+      <div id="consumption-detail"></div>
+      <p style="font-size:0.775rem;color:var(--text-muted);margin-top:0.75rem;">※ 売上・経費をすべて税込で入力している場合の概算です。実際の納付額は税理士または税務署にご確認ください。</p>
+    </div>
+
     <!-- 内訳バー -->
     <div class="card">
       <div class="card-title">
@@ -864,6 +902,11 @@ textarea:focus {
       </div>
     </div>
 
+    <div class="notice info" id="consumption-notice" style="display:none;">
+      <span class="notice-icon">ℹ️</span>
+      <span>年間売上が <strong>1,000万円を超えている</strong> ため、消費税の課税事業者となる場合があります。またインボイス登録事業者の場合は売上にかかわらず課税義務が生じます。別途、消費税の申告・納付が必要です。</span>
+    </div>
+
     <!-- 税金詳細 -->
     <div class="card">
       <div class="card-title">
@@ -871,11 +914,6 @@ textarea:focus {
         税金・社会保険料の内訳
       </div>
       <div class="tax-list" id="tax-list"></div>
-
-      <div class="notice info mt-1" id="consumption-notice" style="display:none;">
-        <span class="notice-icon">ℹ️</span>
-        <span>年間売上が <strong>1,000万円を超えている</strong> ため、消費税の課税事業者となる場合があります。またインボイス登録事業者の場合は売上にかかわらず課税義務が生じます。別途、消費税の申告・納付が必要です。</span>
-      </div>
 
       <div class="notice warn mt-1">
         <span class="notice-icon">⚠️</span>
@@ -1187,12 +1225,13 @@ function calcIncomeTax(taxable) {
 
 // ── メイン計算 ────────────────────────────────────────────────────────────
 function calculate() {
-  const revenue    = parseFloat(document.getElementById('revenue').value) || 0;
-  const expenses   = parseFloat(document.getElementById('expenses').value) || 0;
-  const age        = document.getElementById('age').value;
-  const bizRate    = parseFloat(document.getElementById('business-type').value);
-  const filing     = parseFloat(document.querySelector('input[name=filing]:checked').value);
-  const prefecture = document.getElementById('prefecture').value;
+  const revenue         = parseFloat(document.getElementById('revenue').value) || 0;
+  const expenses        = parseFloat(document.getElementById('expenses').value) || 0;
+  const age             = document.getElementById('age').value;
+  const bizRate         = parseFloat(document.getElementById('business-type').value);
+  const filing          = parseFloat(document.querySelector('input[name=filing]:checked').value);
+  const prefecture      = document.getElementById('prefecture').value;
+  const consumptionType = document.querySelector('input[name=consumption]:checked').value;
 
   const errEl = document.getElementById('error-msg');
   if (!document.getElementById('revenue').value || !document.getElementById('expenses').value) {
@@ -1257,7 +1296,45 @@ function calculate() {
   document.getElementById('sum-takehome').textContent = fmt(Math.max(0, takeHome));
   document.getElementById('sum-rate').textContent     = totalRate + '%';
   document.getElementById('sum-social').textContent   = fmt(nhiTotal + pension);
-  document.getElementById('consumption-notice').style.display = revenue > 10_000_000 ? 'flex' : 'none';
+  // ── 消費税概算 ──
+  let consumptionTax = 0;
+  const salesTax = Math.floor(revenue * 10 / 110);       // 売上に含まれる消費税
+  const purchaseTax = Math.floor(expenses * 10 / 110);   // 経費に含まれる消費税（仕入税額控除の近似）
+
+  if (consumptionType === 'invoice2wari') {
+    consumptionTax = Math.floor(salesTax * 0.20);
+  } else if (consumptionType === 'taxable') {
+    consumptionTax = Math.max(0, salesTax - purchaseTax);
+  }
+
+  const consumptionCard   = document.getElementById('consumption-card');
+  const consumptionDetail = document.getElementById('consumption-detail');
+  const consumptionNotice = document.getElementById('consumption-notice');
+
+  if (consumptionType === 'exempt') {
+    consumptionCard.style.display = 'none';
+    consumptionNotice.style.display = revenue > 10_000_000 ? 'flex' : 'none';
+    if (revenue > 10_000_000) {
+      consumptionNotice.querySelector('span:last-child').innerHTML =
+        '年間売上が <strong>1,000万円を超えている</strong> ため、翌々年から課税事業者となります。またインボイス登録事業者の場合は売上にかかわらず課税義務が生じます。別途、消費税の申告・納付が必要です。';
+    }
+  } else {
+    consumptionCard.style.display = 'block';
+    consumptionNotice.style.display = 'none';
+
+    if (consumptionType === 'invoice2wari') {
+      consumptionDetail.innerHTML = `
+        <div class="tax-row"><span class="tax-row-label">売上に含まれる消費税（税込売上 × 10/110）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
+        <div class="tax-row"><span class="tax-row-label">2割特例 納付額（売上消費税 × 20%）</span><span class="tax-row-value" style="color:var(--orange);font-weight:700;">${fmt(consumptionTax)}</span></div>
+        <div class="tax-row" style="margin-top:0.5rem;"><span class="tax-row-label" style="font-size:0.8rem;color:var(--text-muted);">※ 2割特例は令和8年9月申告分まで。以降は原則課税または簡易課税に移行</span><span></span></div>`;
+    } else {
+      consumptionDetail.innerHTML = `
+        <div class="tax-row"><span class="tax-row-label">売上消費税（税込売上 × 10/110）</span><span class="tax-row-value">${fmt(salesTax)}</span></div>
+        <div class="tax-row"><span class="tax-row-label">仕入消費税・経費分（税込経費 × 10/110）</span><span class="tax-row-value minus">▲${fmt(purchaseTax)}</span></div>
+        <div class="tax-row subtotal"><span class="tax-row-label">消費税 納付額（概算）</span><span class="tax-row-value" style="color:var(--orange);font-weight:700;">${fmt(consumptionTax)}</span></div>
+        <div class="tax-row" style="margin-top:0.5rem;"><span class="tax-row-label" style="font-size:0.8rem;color:var(--text-muted);">※ 人件費・給与等の非課税経費は仕入税額控除の対象外のため実際の納付額と異なる場合があります</span><span></span></div>`;
+    }
+  }
 
   renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome);
   renderTaxList({
