@@ -480,6 +480,56 @@ textarea:focus {
 }
 .amount-preview:empty { display: none; }
 
+/* ── 入力モード切替 ── */
+.input-mode-wrap {
+  display: flex; gap: 3px;
+  background: var(--gray-light); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+.input-mode-label {
+  flex: 1; text-align: center;
+  padding: 0.45rem 0.5rem; border-radius: 6px;
+  cursor: pointer; font-size: 0.875rem; font-weight: 500;
+  color: var(--text-muted); transition: all 0.15s; user-select: none;
+}
+.input-mode-label:has(input:checked) {
+  background: white; color: var(--blue); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.input-mode-label input { display: none; }
+
+/* ── 月次入力グリッド ── */
+.monthly-grid {
+  border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.monthly-grid-header, .monthly-grid-row, .monthly-grid-total {
+  display: grid; grid-template-columns: 2.75rem 1fr 1fr;
+  gap: 0.5rem; padding: 0.375rem 0.75rem; align-items: center;
+}
+.monthly-grid-header {
+  background: var(--gray-light); border-bottom: 1px solid var(--border);
+  font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+}
+.monthly-grid-row { border-bottom: 1px solid #f1f5f9; }
+.monthly-grid-row:nth-child(even) { background: #fafbfc; }
+.monthly-grid-total {
+  background: var(--blue-light); border-top: 2px solid #bfdbfe;
+  font-size: 0.85rem; font-weight: 700; color: var(--blue-dark);
+}
+.monthly-month { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+.monthly-grid-row input[type="number"] {
+  width: 100%; padding: 0.3rem 0.5rem;
+  border: 1.5px solid var(--border); border-radius: 6px;
+  font-size: 0.8rem; text-align: right; color: var(--text);
+  -webkit-appearance: none; appearance: none; background: white;
+}
+.monthly-grid-row input[type="number"]:focus {
+  outline: none; border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
+}
+.monthly-total-value { text-align: right; font-size: 0.82rem; }
+
 /* ── Responsive ──────────────────────────────────────────────────────── */
 
 /* タブレット（〜 768px） */
@@ -582,6 +632,15 @@ textarea:focus {
   .faq-item { padding: 0.75rem 0; }
   .faq-q { font-size: 0.875rem; }
   .faq-a { font-size: 0.8125rem; padding-left: 1.25rem; }
+
+  /* 月次グリッド */
+  .monthly-grid-header, .monthly-grid-row, .monthly-grid-total {
+    grid-template-columns: 2rem 1fr 1fr; gap: 0.25rem; padding: 0.3rem 0.5rem;
+  }
+  .monthly-grid-header { font-size: 0.68rem; padding: 0.4rem 0.5rem; }
+  .monthly-month { font-size: 0.72rem; }
+  .monthly-grid-total { font-size: 0.78rem; }
+  .monthly-total-value { font-size: 0.75rem; }
 
   /* フィードバック */
   .feedback-desc { font-size: 0.8125rem; }
@@ -690,8 +749,23 @@ textarea:focus {
         </select>
       </div>
 
-      <!-- 売上 -->
-      <div class="form-group">
+      <!-- 入力モード切替 -->
+      <div class="form-group full">
+        <label>売上・経費の入力方法</label>
+        <div class="input-mode-wrap">
+          <label class="input-mode-label">
+            <input type="radio" name="input-mode" value="annual" checked onchange="setInputMode('annual')">
+            <span>年間合計で入力</span>
+          </label>
+          <label class="input-mode-label">
+            <input type="radio" name="input-mode" value="monthly" onchange="setInputMode('monthly')">
+            <span>月ごとに入力</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 売上（年間） -->
+      <div class="form-group" id="annual-revenue-group">
         <label>年間売上（税抜）<span class="required"> *</span></label>
         <div class="input-wrap">
           <input type="number" id="revenue" placeholder="例: 5000000" min="0" step="1000" autocomplete="off" oninput="updatePreview('revenue','revenue-preview')">
@@ -700,14 +774,42 @@ textarea:focus {
         <span class="amount-preview" id="revenue-preview"></span>
       </div>
 
-      <!-- 経費 -->
-      <div class="form-group">
+      <!-- 経費（年間） -->
+      <div class="form-group" id="annual-expense-group">
         <label>年間経費（必要経費合計）<span class="required"> *</span></label>
         <div class="input-wrap">
           <input type="number" id="expenses" placeholder="例: 1500000" min="0" step="1000" autocomplete="off" oninput="updatePreview('expenses','expenses-preview')">
           <span class="input-unit">円</span>
         </div>
         <span class="amount-preview" id="expenses-preview"></span>
+      </div>
+
+      <!-- 月次入力グリッド -->
+      <div id="monthly-inputs" class="form-group full" style="display:none;">
+        <div class="monthly-grid">
+          <div class="monthly-grid-header">
+            <span>月</span>
+            <span style="text-align:right;">売上（税抜）円</span>
+            <span style="text-align:right;">経費　円</span>
+          </div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 1月</span><input type="number" id="rev-01" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-01" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 2月</span><input type="number" id="rev-02" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-02" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 3月</span><input type="number" id="rev-03" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-03" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 4月</span><input type="number" id="rev-04" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-04" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 5月</span><input type="number" id="rev-05" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-05" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 6月</span><input type="number" id="rev-06" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-06" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 7月</span><input type="number" id="rev-07" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-07" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 8月</span><input type="number" id="rev-08" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-08" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month"> 9月</span><input type="number" id="rev-09" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-09" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month">10月</span><input type="number" id="rev-10" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-10" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month">11月</span><input type="number" id="rev-11" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-11" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-row"><span class="monthly-month">12月</span><input type="number" id="rev-12" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"><input type="number" id="exp-12" min="0" step="1000" placeholder="0" autocomplete="off" oninput="updateMonthlyTotals()"></div>
+          <div class="monthly-grid-total">
+            <span>合計</span>
+            <span class="monthly-total-value" id="monthly-rev-total">—</span>
+            <span class="monthly-total-value" id="monthly-exp-total">—</span>
+          </div>
+        </div>
       </div>
 
       <!-- 年齢 -->
@@ -1240,10 +1342,38 @@ function calcIncomeTax(taxable) {
   return 0; // フォールバック（Infinityバケットで通常到達しない）
 }
 
+// ── 入力モード切替 ────────────────────────────────────────────────────────
+function setInputMode(mode) {
+  const isMonthly = mode === 'monthly';
+  document.getElementById('annual-revenue-group').style.display = isMonthly ? 'none' : '';
+  document.getElementById('annual-expense-group').style.display = isMonthly ? 'none' : '';
+  document.getElementById('monthly-inputs').style.display       = isMonthly ? ''     : 'none';
+  if (isMonthly) updateMonthlyTotals();
+}
+
+function getMonthlyTotal(prefix) {
+  let total = 0;
+  for (let i = 1; i <= 12; i++) {
+    total += parseFloat(document.getElementById(`${prefix}-${String(i).padStart(2, '0')}`).value) || 0;
+  }
+  return total;
+}
+
+function updateMonthlyTotals() {
+  const revTotal = getMonthlyTotal('rev');
+  const expTotal = getMonthlyTotal('exp');
+  const fmtT = n => n > 0 ? n.toLocaleString('ja-JP') + ' 円' : '—';
+  document.getElementById('monthly-rev-total').textContent = fmtT(revTotal);
+  document.getElementById('monthly-exp-total').textContent = fmtT(expTotal);
+}
+
 // ── メイン計算 ────────────────────────────────────────────────────────────
 function calculate() {
-  const revenue         = parseFloat(document.getElementById('revenue').value) || 0;
-  const expenses        = parseFloat(document.getElementById('expenses').value) || 0;
+  const inputMode = document.querySelector('input[name="input-mode"]:checked').value;
+  const revenue   = inputMode === 'monthly' ? getMonthlyTotal('rev')
+                  : parseFloat(document.getElementById('revenue').value) || 0;
+  const expenses  = inputMode === 'monthly' ? getMonthlyTotal('exp')
+                  : parseFloat(document.getElementById('expenses').value) || 0;
   const age             = document.getElementById('age').value;
   const bizRate         = parseFloat(document.getElementById('business-type').value);
   const filing          = parseFloat(document.querySelector('input[name=filing]:checked').value);
@@ -1251,10 +1381,18 @@ function calculate() {
   const consumptionType = document.querySelector('input[name=consumption]:checked').value;
 
   const errEl = document.getElementById('error-msg');
-  if (!document.getElementById('revenue').value || !document.getElementById('expenses').value) {
-    errEl.textContent = '売上と経費を入力してください。';
-    errEl.style.display = 'block';
-    return;
+  if (inputMode === 'monthly') {
+    if (revenue === 0 && expenses === 0) {
+      errEl.textContent = '月次の売上または経費を少なくとも1ヶ月分入力してください。';
+      errEl.style.display = 'block';
+      return;
+    }
+  } else {
+    if (!document.getElementById('revenue').value || !document.getElementById('expenses').value) {
+      errEl.textContent = '売上と経費を入力してください。';
+      errEl.style.display = 'block';
+      return;
+    }
   }
   if (document.getElementById('business-type').value === '') {
     errEl.textContent = '業種を選択してください。';
