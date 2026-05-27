@@ -1432,10 +1432,10 @@ function calculate() {
   const inputMode = document.querySelector('input[name="input-mode"]:checked').value;
   const inputUnit = document.querySelector('input[name="input-unit"]:checked').value;
   const unitMult  = inputUnit === 'man' ? 10_000 : 1;
-  const revenue   = (inputMode === 'monthly' ? getMonthlyTotal('rev')
-                  : parseFloat(document.getElementById('revenue').value) || 0) * unitMult;
-  const expenses  = (inputMode === 'monthly' ? getMonthlyTotal('exp')
-                  : parseFloat(document.getElementById('expenses').value) || 0) * unitMult;
+  const revenue   = Math.round((inputMode === 'monthly' ? getMonthlyTotal('rev')
+                  : parseFloat(document.getElementById('revenue').value) || 0) * unitMult);
+  const expenses  = Math.round((inputMode === 'monthly' ? getMonthlyTotal('exp')
+                  : parseFloat(document.getElementById('expenses').value) || 0) * unitMult);
   const age             = document.getElementById('age').value;
   const bizRate         = parseFloat(document.getElementById('business-type').value);
   const filing          = parseFloat(document.querySelector('input[name=filing]:checked').value);
