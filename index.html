@@ -1543,6 +1543,10 @@ function renderTaxList(d) {
     : d.filing === 100_000 ? '青色10万円控除'
     : '白色申告（控除なし）';
 
+  // 青色申告特別控除の実効額（事業所得を上限とする）
+  const effectiveFiling = Math.min(d.filing, d.incomeBeforeDeduction);
+  const filingCapped    = d.filing > 0 && effectiveFiling < d.filing;
+
   const mRate = (d.nhiData.m[0] * 100).toFixed(2);
   const sRate = (d.nhiData.s[0] * 100).toFixed(2);
   const nRate = (d.nhiData.n[0] * 100).toFixed(2);
@@ -1559,7 +1563,7 @@ function renderTaxList(d) {
       rows: [
         { label: '売上',       value: fmt(d.revenue) },
         { label: '経費',       value: `▲${fmt(d.expenses)}`, cls: 'minus' },
-        { label: filingLabel,  value: `▲${fmt(d.filing)}`,   cls: 'minus' },
+        { label: filingLabel + (filingCapped ? '（所得を上限に適用）' : ''), value: `▲${fmt(effectiveFiling)}`, cls: 'minus' },
         { label: '事業所得',   value: fmt(d.businessIncome) },
         { label: '社会保険料控除（国民健康保険 + 年金）', value: `▲${fmt(d.socialDeduction)}`, cls: 'minus' },
         { label: '基礎控除',   value: `▲${fmt(BASIC_DEDUCTION_IT)}`, cls: 'minus' },
