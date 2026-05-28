@@ -1233,13 +1233,13 @@ const INCOME_TAX_TABLE = [
 ];
 const BASIC_DEDUCTION_IT = 480_000;   // 所得税 基礎控除
 const BASIC_DEDUCTION_RT = 430_000;   // 住民税 基礎控除
-const PENSION_MONTHLY    = 16_980;
-const PENSION_ANNUAL     = PENSION_MONTHLY * 12;  // 203,760円
+const PENSION_MONTHLY    = 17_510;
+const PENSION_ANNUAL     = PENSION_MONTHLY * 12;  // 210,120円
 const BUSINESS_TAX_DEDUCTION = 2_900_000;         // 個人事業税 事業主控除
 
 // ── 国民健康保険 都道府県別料率（令和7年度 代表市区町村参考値）──────────
 // m=[所得割率, 均等割+平等割（1人世帯）], s=[後期高齢者支援分], n=[介護分（40〜64歳）]
-// 上限額は全国共通: 医療660万・後期260万・介護170万
+// 上限額は全国共通: 医療66万・後期26万・介護17万
 const NHI_PREFECTURES = [
   { pref:'北海道',  city:'札幌市',    m:[0.0935,53210], s:[0.0278,16480], n:[0.0254,13480] },
   { pref:'青森県',  city:'青森市',    m:[0.0971,44760], s:[0.0246,14040], n:[0.0274,13800] },
@@ -1751,8 +1751,8 @@ function renderTaxList(d) {
       rows: [
         { label: '計算基準額（事業所得 − 住民税基礎控除43万）', value: fmt(d.nhiBase) },
         ...(nhiReducLabel ? [{ label: nhiReducLabel, value: `${Math.round((1 - d.nhiFlatMult) * 10)}割軽減適用`, cls: 'minus' }] : []),
-        { label: `医療分（所得割${mRate}% + 均等割${mFlat}円、上限65万）`, value: fmt(d.nhiMedical) },
-        { label: `後期高齢者支援分（所得割${sRate}% + 均等割${sFlat}円、上限22万）`, value: fmt(d.nhiSupport) },
+        { label: `医療分（所得割${mRate}% + 均等割${mFlat}円、上限66万）`, value: fmt(d.nhiMedical) },
+        { label: `後期高齢者支援分（所得割${sRate}% + 均等割${sFlat}円、上限26万）`, value: fmt(d.nhiSupport) },
         d.age === '40to64'
           ? { label: `介護分（所得割${nRate}% + 均等割${nFlat}円、上限17万）`, value: fmt(d.nhiNursing) }
           : { label: '介護分', value: d.age === 'under40' ? '40歳未満のため非該当' : '65歳以上は別制度（市区町村）' },
