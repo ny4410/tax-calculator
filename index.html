@@ -2683,7 +2683,7 @@ function updateISimSavings() {
       <div class="isim-sum-fi">
         <span class="isim-sum-fi-lbl">節税後の可処分所得</span>
         <span class="isim-sum-fi-val">${fmt(withAll.disposable)}</span>
-        <span class="isim-sum-fi-diff">▲ ${fmt(combinedSave)} 節税前比</span>
+        <span class="isim-sum-fi-diff">節税前: ${fmt(_isimBaseline.disposable)}</span>
       </div>
     </div>`;
 }
