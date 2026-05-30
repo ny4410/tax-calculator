@@ -1183,7 +1183,7 @@ function renderSummary(kyosaiAnnual, idecoAnnual, kyosaiSave, idecoSave, combine
       <div class="sum-footer-item">
         <span class="sum-footer-lbl">節税後の可処分所得</span>
         <span class="sum-footer-val">${fmt(withBoth.disposableIncome)}</span>
-        <span class="sum-footer-diff">節税前: ${fmt(_baseline.disposableIncome)}</span>
+        <span class="sum-footer-diff">▲ ${fmt(combinedSave)} 節税前比</span>
       </div>
     </div>`;
 }
