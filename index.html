@@ -1215,6 +1215,14 @@ textarea:focus {
       <div class="summary-note">所得税 ＋ 復興特別所得税 ＋ 住民税 ＋ 個人事業税 ＋ 国民健康保険 ＋ 国民年金</div>
       <div class="summary-grid">
         <div class="summary-item">
+          <div class="summary-item-label">年間売上（税抜）</div>
+          <div class="summary-item-value" id="sum-revenue">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-label">年間経費</div>
+          <div class="summary-item-value" id="sum-expenses">—</div>
+        </div>
+        <div class="summary-item">
           <div class="summary-item-label">事業所得</div>
           <div class="summary-item-value" id="sum-income">—</div>
         </div>
@@ -1881,6 +1889,8 @@ function calculate() {
 
   // ── 描画 ──
   document.getElementById('sum-total').textContent    = fmt(grandTotal);
+  document.getElementById('sum-revenue').textContent  = fmt(revenue);
+  document.getElementById('sum-expenses').textContent = fmt(expenses);
   document.getElementById('sum-income').textContent   = fmt(businessIncome);
   document.getElementById('sum-rate').textContent     = totalRate + '%';
   document.getElementById('sum-social').textContent   = fmt(nhiTotal + pension);
