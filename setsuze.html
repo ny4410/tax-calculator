@@ -323,6 +323,7 @@ input[type="range"]::-moz-range-thumb {
 .sum-footer-item { background: rgba(0,0,0,0.15); border-radius: 8px; padding: 0.75rem; }
 .sum-footer-lbl { font-size: 0.72rem; opacity: 0.75; display: block; margin-bottom: 0.15rem; }
 .sum-footer-val { font-size: 1rem; font-weight: 700; display: block; }
+.sum-footer-diff { font-size: 0.72rem; color: #86efac; display: block; margin-top: 0.2rem; }
 .sum-zero-note {
   text-align: center; padding: 2rem 1rem; font-size: 0.875rem;
   color: rgba(255,255,255,0.7);
@@ -1177,10 +1178,12 @@ function renderSummary(kyosaiAnnual, idecoAnnual, kyosaiSave, idecoSave, combine
       <div class="sum-footer-item">
         <span class="sum-footer-lbl">節税後の税金・社保 合計</span>
         <span class="sum-footer-val">${fmt(withBoth.grandTotal)}</span>
+        <span class="sum-footer-diff">▼ ${fmt(combinedSave)} 節税前比</span>
       </div>
       <div class="sum-footer-item">
         <span class="sum-footer-lbl">節税後の可処分所得</span>
         <span class="sum-footer-val">${fmt(withBoth.disposableIncome)}</span>
+        <span class="sum-footer-diff">▲ ${fmt(combinedSave)} 節税前比</span>
       </div>
     </div>`;
 }
