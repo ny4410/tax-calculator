@@ -377,8 +377,10 @@ input[type="number"]:focus, select:focus {
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 0.25rem;
 }
-.fl-takehome-label { font-size: 0.875rem; font-weight: 600; }
-.fl-takehome-val   { font-size: 2rem; font-weight: 700; color: #86efac; }
+.fl-takehome-left    { display: flex; flex-direction: column; gap: 0.2rem; }
+.fl-takehome-label   { font-size: 0.875rem; font-weight: 600; }
+.fl-takehome-formula { font-size: 0.65rem; opacity: 0.55; }
+.fl-takehome-val     { font-size: 2rem; font-weight: 700; color: #86efac; }
 .fl-footer { display: flex; gap: 0.625rem; margin-top: 0.75rem; }
 .fl-footer-item {
   flex: 1; background: rgba(0,0,0,0.18); border-radius: 8px; padding: 0.625rem 0.75rem;
@@ -1292,7 +1294,10 @@ textarea:focus {
 
       <!-- ────── 可処分所得 -->
       <div class="fl-takehome">
-        <span class="fl-takehome-label">可処分所得（概算）</span>
+        <div class="fl-takehome-left">
+          <span class="fl-takehome-label">可処分所得（概算）</span>
+          <span class="fl-takehome-formula">事業所得 − 税金・社会保険料 合計 ＝ 可処分所得</span>
+        </div>
         <span class="fl-takehome-val" id="sum-takehome">—</span>
       </div>
 
@@ -2001,7 +2006,7 @@ function calculate() {
   document.getElementById('fl-taxes-total').innerHTML =
     `<div class="fl-divider"></div>
      <div class="fl-subtotal">
-       <span class="fl-subtotal-label">税金・社会保険料 合計</span>
+       <span class="fl-subtotal-label">＝ 税金・社会保険料 合計</span>
        <span class="fl-subtotal-val">▲${fmt(grandTotal)}</span>
      </div>`;
 
