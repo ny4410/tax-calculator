@@ -324,6 +324,19 @@ input[type="number"]:focus, select:focus {
 #result-section { display: none; }
 #result-section.visible { display: block; }
 
+/* ── 節税シミュレーションリンクボタン ── */
+.setsuze-link-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.25rem; padding: 0.9rem 1.25rem; margin: 0 0 1rem;
+  background: linear-gradient(135deg, #059669, #047857);
+  color: white; text-decoration: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 700; letter-spacing: 0.01em;
+  transition: opacity 0.15s, transform 0.1s;
+  text-align: center;
+}
+.setsuze-link-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.setsuze-link-sub { font-size: 0.78rem; font-weight: 400; opacity: 0.85; }
+
 /* Summary hero card */
 .summary-hero {
   background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
@@ -1352,6 +1365,12 @@ textarea:focus {
       </div>
     </div>
 
+    <!-- 節税シミュレーションへのリンク -->
+    <a href="/setsuze.html" class="setsuze-link-btn" id="setsuze-link">
+      💡 節税シミュレーションを見る →
+      <span class="setsuze-link-sub">小規模企業共済・iDeCo・ふるさと納税の節税効果を試算</span>
+    </a>
+
     <div class="notice info" id="consumption-notice" style="display:none;">
       <span class="notice-icon">ℹ️</span>
       <span>年間売上が <strong>1,000万円を超えている</strong> ため、消費税の課税事業者となる場合があります。またインボイス登録事業者の場合は売上にかかわらず課税義務が生じます。別途、消費税の申告・納付が必要です。</span>
@@ -2080,6 +2099,19 @@ function calculate() {
     residentIncomeLevy, residentFlatLevy, forestTax, residentTotal,
     socialDeduction, grandTotal, addDed,
   });
+
+  // localStorageに計算データを保存（節税シミュレーションページへの引き継ぎ用）
+  try {
+    localStorage.setItem('setsuze_base', JSON.stringify({
+      revenue, expenses, filing, bizRate, age, prefecture,
+      spouse:   addDed.spouse,
+      deps:     addDed.deps,
+      depsSp:   addDed.depsSp,
+      medPaid:  addDed.medPaid,
+      lifePaid: addDed.lifePaid,
+      eqPaid:   addDed.eqPaid,
+    }));
+  } catch(e) {}
 
   const section = document.getElementById('result-section');
   section.classList.add('visible');

@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ── Google AdSense ─────────────────────────────────────── -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3229389531540846"
+     crossorigin="anonymous"></script>
+
+<!-- ── Google Analytics（GA4） ────────────────────────────── -->
+<script>
+  (function() {
+    var q = location.search;
+    if (q.indexOf('ga_opt_out=1') !== -1) localStorage.setItem('ga_exclude_owner', '1');
+    else if (q.indexOf('ga_opt_in=1') !== -1) localStorage.removeItem('ga_exclude_owner');
+    if (localStorage.getItem('ga_exclude_owner') === '1') window['ga-disable-G-430SVZE0TQ'] = true;
+  })();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-430SVZE0TQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-430SVZE0TQ');
+</script>
+
+<title>節税シミュレーション | 個人事業主 税金計算ツール</title>
+<meta name="description" content="個人事業主・フリーランスの節税シミュレーション。小規模企業共済・iDeCo・ふるさと納税の節税効果を試算できます。売上・経費を入力するだけで節税額の概算がわかります。">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://freelance-calcs.com/setsuze.html">
+<meta property="og:title" content="節税シミュレーション | 個人事業主 税金計算ツール">
+<meta property="og:description" content="小規模企業共済・iDeCo・ふるさと納税の節税効果を試算。個人事業主・フリーランス向け無料ツール。">
+<meta property="og:url" content="https://freelance-calcs.com/setsuze.html">
+<style>
+:root {
+  --blue: #2563eb; --blue-light: #eff6ff; --blue-dark: #1e40af;
+  --green: #16a34a; --green-light: #f0fdf4;
+  --green2: #059669; --green2-dark: #047857;
+  --orange: #ea580c; --orange-light: #fff7ed;
+  --purple: #7c3aed; --purple-light: #f5f3ff;
+  --yellow: #a16207; --yellow-light: #fef9c3;
+  --red: #dc2626; --red-light: #fef2f2;
+  --gray-light: #f8fafc; --border: #e2e8f0;
+  --text: #0f172a; --text-muted: #64748b;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  background: var(--gray-light); color: var(--text); min-height: 100vh; line-height: 1.55;
+}
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, var(--green2) 0%, var(--green2-dark) 50%, #065f46 100%);
+  color: white; padding: 2rem 1rem 1.875rem; text-align: center; position: relative;
+}
+.back-link {
+  position: absolute; top: 1rem; left: 1rem;
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  font-size: 0.8125rem; font-weight: 500;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px; padding: 0.3rem 0.75rem; transition: background 0.15s;
+}
+.back-link:hover { background: rgba(255,255,255,0.25); color: white; }
+header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+header p { opacity: 0.85; font-size: 0.875rem; margin-top: 0.375rem; }
+.header-badges {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem; flex-wrap: wrap; margin-top: 0.875rem;
+}
+.header-badge {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px; padding: 0.25rem 0.75rem; font-size: 0.8125rem;
+}
+
+/* ── Layout ── */
+main { max-width: 820px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+
+/* ── Cards ── */
+.card {
+  background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 1.5rem; margin-bottom: 1.25rem;
+}
+.card-title {
+  font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem; border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.card-title-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: #d1fae5; color: var(--green2);
+  display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+}
+.card-title-icon.blue { background: var(--blue-light); color: var(--blue); }
+
+/* ── Notice ── */
+.notice-card {
+  background: #ecfdf5; border: 1px solid #6ee7b7; border-radius: var(--radius);
+  padding: 0.875rem 1rem; margin-bottom: 1.25rem;
+  font-size: 0.875rem; color: #065f46;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 0.8125rem; font-weight: 500; color: var(--text-muted); }
+.required { color: var(--red); }
+.input-wrap { position: relative; }
+.input-wrap input { padding-right: 3.25rem; }
+.input-unit {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  font-size: 0.8rem; color: var(--text-muted); pointer-events: none; white-space: nowrap;
+}
+input[type="number"], select {
+  width: 100%; padding: 0.6rem 0.875rem; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 0.9375rem; color: var(--text); background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none; appearance: none;
+}
+input[type="number"]:focus, select:focus {
+  outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+.radio-option {
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.625rem 0.875rem; border: 1.5px solid var(--border);
+  border-radius: 8px; cursor: pointer; transition: all 0.15s; font-size: 0.875rem;
+}
+.radio-option:has(input:checked) {
+  border-color: var(--blue); background: var(--blue-light); color: var(--blue-dark);
+}
+.radio-option input { accent-color: var(--blue); }
+.radio-option-label { font-weight: 600; }
+.radio-option-desc { font-size: 0.78rem; color: var(--text-muted); }
+.radio-option:has(input:checked) .radio-option-desc { color: #3b82f6; }
+.hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
+
+/* ── その他控除 ── */
+.deductions-wrap {
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 1rem;
+}
+.deductions-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem; cursor: pointer;
+  background: var(--gray-light); user-select: none; transition: background 0.15s;
+}
+.deductions-header:hover { background: #eef2ff; }
+.deductions-title { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+.deductions-subtitle { font-size: 0.78rem; color: var(--text-muted); flex: 1; }
+.deductions-chevron {
+  font-size: 0.65rem; color: var(--text-muted);
+  transition: transform 0.2s; display: inline-block;
+}
+.deductions-chevron.open { transform: rotate(180deg); }
+.deductions-body { border-top: 1px solid var(--border); padding: 0.75rem 1rem; background: #fff; }
+.deduction-item {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 0.75rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border);
+}
+.deduction-item:last-child { border-bottom: none; padding-bottom: 0; }
+.deduction-label-group { flex: 1; min-width: 0; }
+.deduction-name { font-size: 0.84rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+.deduction-desc { font-size: 0.76rem; color: var(--text-muted); }
+.deduction-input-wrap { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+.deduction-input {
+  width: 6rem; text-align: right; padding: 0.3rem 0.45rem;
+  border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; color: var(--text);
+  background: #fff; -moz-appearance: textfield;
+}
+.deduction-input::-webkit-outer-spin-button,
+.deduction-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.deduction-input:focus { outline: none; border-color: var(--blue); }
+.deduction-unit { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+.deduction-check-label {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.85rem; color: var(--text); cursor: pointer; white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .deduction-item { flex-direction: column; gap: 0.375rem; }
+  .deduction-input-wrap { align-self: flex-end; }
+}
+
+/* ── Buttons ── */
+.btn-calc {
+  display: block; width: 100%; padding: 1rem; margin-top: 1.25rem;
+  background: linear-gradient(135deg, var(--green2), var(--green2-dark)); color: white;
+  border: none; border-radius: 10px; font-size: 1.0625rem; font-weight: 700;
+  cursor: pointer; transition: opacity 0.15s; letter-spacing: 0.01em;
+}
+.btn-calc:hover { opacity: 0.9; }
+
+/* ── Baseline grid ── */
+.baseline-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.875rem; margin-bottom: 1rem;
+}
+@media (max-width: 520px) { .baseline-grid { grid-template-columns: 1fr 1fr; } }
+.baseline-item {
+  background: var(--gray-light); border-radius: 10px;
+  padding: 0.875rem 1rem; border: 1.5px solid var(--border);
+}
+.baseline-item.hi-red { background: var(--red-light); border-color: #fca5a5; }
+.baseline-item.hi-green { background: var(--green-light); border-color: #86efac; }
+.b-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.2rem; }
+.b-value { font-size: 1.05rem; font-weight: 700; }
+.baseline-item.hi-red .b-value { color: var(--red); }
+.baseline-item.hi-green .b-value { color: var(--green); }
+.baseline-detail { font-size: 0.76rem; color: var(--text-muted); line-height: 1.7; }
+.baseline-detail span { display: inline-block; margin-right: 1rem; }
+
+/* ── Sim cards ── */
+.sim-card {
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 1.25rem; margin-bottom: 1rem; transition: border-color 0.2s, background 0.2s;
+}
+.sim-card.has-value { border-color: #6ee7b7; background: #f0fdf4; }
+.sim-header { display: flex; gap: 0.875rem; margin-bottom: 1rem; align-items: flex-start; }
+.sim-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+.sim-title { font-size: 0.9375rem; font-weight: 700; color: var(--text); }
+.sim-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; line-height: 1.55; }
+.sim-badge {
+  display: inline-block; font-size: 0.67rem; background: #dcfce7; color: #15803d;
+  border-radius: 100px; padding: 0.1rem 0.45rem; font-weight: 600; margin-top: 0.3rem;
+}
+.sim-badge.blue { background: var(--blue-light); color: var(--blue-dark); }
+
+/* ── Slider ── */
+.slider-wrap { margin: 0.25rem 0 0.75rem; }
+.slider-track-labels {
+  display: flex; justify-content: space-between;
+  font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.35rem;
+}
+input[type="range"] {
+  width: 100%; height: 6px; appearance: none; -webkit-appearance: none;
+  background: var(--border); border-radius: 3px; cursor: pointer; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  background: var(--green2); border-radius: 50%; cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; background: var(--green2);
+  border-radius: 50%; cursor: pointer; border: none;
+}
+.slider-controls {
+  display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;
+}
+.slider-num-input {
+  width: 6.5rem; text-align: right; padding: 0.35rem 0.5rem;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 0.9375rem; font-weight: 600; color: var(--text);
+  -moz-appearance: textfield;
+}
+.slider-num-input::-webkit-outer-spin-button,
+.slider-num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.slider-num-input:focus { outline: none; border-color: var(--green2); }
+.slider-unit-lbl { font-size: 0.8rem; color: var(--text-muted); }
+.slider-monthly { font-size: 0.78rem; color: var(--text-muted); margin-left: auto; }
+
+/* ── Savings result grid ── */
+.savings-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-top: 0.875rem;
+}
+.savings-item {
+  background: white; border-radius: 8px; padding: 0.75rem 0.875rem; border: 1px solid var(--border);
+}
+.savings-label { font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 0.15rem; }
+.savings-val { font-size: 1.0625rem; font-weight: 700; }
+.savings-val.green { color: var(--green2); }
+.savings-val.muted { color: var(--text-muted); }
+.savings-val.red { color: var(--red); }
+
+/* ── ふるさと納税 ── */
+.furusato-limit-box {
+  background: var(--yellow-light); border: 1.5px solid #fde68a; border-radius: 10px;
+  padding: 1rem 1.125rem; margin: 0.875rem 0;
+}
+.furusato-limit-lbl { font-size: 0.78rem; color: var(--yellow); margin-bottom: 0.3rem; font-weight: 500; }
+.furusato-limit-val { font-size: 1.875rem; font-weight: 700; color: #92400e; }
+.furusato-limit-note { font-size: 0.72rem; color: var(--yellow); margin-top: 0.25rem; }
+.furusato-breakdown {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin-top: 0.875rem;
+}
+@media (max-width: 480px) { .furusato-breakdown { grid-template-columns: 1fr 1fr; } }
+.furusato-item {
+  background: white; border-radius: 8px; padding: 0.75rem 0.875rem;
+  border: 1px solid var(--border); text-align: center;
+}
+.furusato-item-lbl { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem; }
+.furusato-item-val { font-size: 0.9375rem; font-weight: 700; }
+.furusato-item-val.green { color: var(--green); }
+.furusato-item-val.orange { color: var(--orange); }
+.furusato-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.6; }
+
+/* ── Summary card ── */
+.summary-hero {
+  background: linear-gradient(135deg, var(--green2) 0%, var(--green2-dark) 60%, #065f46 100%);
+  border-radius: var(--radius); padding: 1.5rem; color: white; margin-bottom: 1.25rem;
+}
+.summary-hero-title { font-size: 0.875rem; font-weight: 500; opacity: 0.85; margin-bottom: 1rem; }
+.sum-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.35rem 0; font-size: 0.82rem;
+}
+.sum-row-lbl { opacity: 0.85; }
+.sum-row-val { font-weight: 600; }
+.sum-divider { border: none; border-top: 1px solid rgba(255,255,255,0.22); margin: 0.5rem 0; }
+.sum-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.5rem 0;
+}
+.sum-total-lbl { font-size: 1.0625rem; font-weight: 700; }
+.sum-total-val { font-size: 2rem; font-weight: 700; color: #86efac; }
+.sum-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; }
+.sum-footer-item { background: rgba(0,0,0,0.15); border-radius: 8px; padding: 0.75rem; }
+.sum-footer-lbl { font-size: 0.72rem; opacity: 0.75; display: block; margin-bottom: 0.15rem; }
+.sum-footer-val { font-size: 1rem; font-weight: 700; display: block; }
+.sum-zero-note {
+  text-align: center; padding: 2rem 1rem; font-size: 0.875rem;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Error ── */
+#error-msg {
+  color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; display: none;
+}
+
+/* ── Footer ── */
+footer {
+  background: #0f172a; color: #94a3b8;
+  text-align: center; padding: 2rem 1rem; font-size: 0.8125rem; line-height: 1.7;
+}
+footer a { color: #64748b; text-decoration: underline; font-size: 0.8rem; }
+
+/* ── Utility ── */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="back-link">← 税金計算に戻る</a>
+  <h1>💡 節税シミュレーション</h1>
+  <p>個人事業主が活用できる節税手段と節税効果を試算</p>
+  <div class="header-badges">
+    <span class="header-badge">🏦 小規模企業共済</span>
+    <span class="header-badge">📈 iDeCo</span>
+    <span class="header-badge">🎁 ふるさと納税</span>
+  </div>
+</header>
+
+<main>
+
+  <div id="from-main-notice" class="notice-card hidden">
+    ✅ 税金計算ページの入力内容を引き継ぎました。内容を確認・変更のうえ計算してください。
+  </div>
+
+  <!-- ── 入力カード ── -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon blue">✏️</div>
+      基本情報の入力
+    </div>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>年間売上（税抜）<span class="required"> *</span></label>
+        <div class="input-wrap">
+          <input type="number" id="revenue" placeholder="例: 500" min="0" step="1" autocomplete="off">
+          <span class="input-unit">万円</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>年間経費<span class="required"> *</span></label>
+        <div class="input-wrap">
+          <input type="number" id="expenses" placeholder="例: 150" min="0" step="1" autocomplete="off">
+          <span class="input-unit">万円</span>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>申告方法（青色申告特別控除）</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="filing" value="650000" checked>
+            <span>
+              <span class="radio-option-label">青色申告（65万円控除）</span><br>
+              <span class="radio-option-desc">電子帳簿保存またはe-Taxによる申告・複式簿記</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="550000">
+            <span>
+              <span class="radio-option-label">青色申告（55万円控除）</span><br>
+              <span class="radio-option-desc">複式簿記・貸借対照表の添付</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="100000">
+            <span>
+              <span class="radio-option-label">青色申告（10万円控除）</span><br>
+              <span class="radio-option-desc">簡易帳簿</span>
+            </span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="filing" value="0">
+            <span>
+              <span class="radio-option-label">白色申告（控除なし）</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>業種（個人事業税の税率）</label>
+        <select id="business-type">
+          <option value="" selected disabled>― 業種を選択 ―</option>
+          <optgroup label="🖥️ IT・エンジニア系">
+            <option value="5">Webエンジニア・プログラマー（5%）</option>
+            <option value="5">SES・システムエンジニアリング（5%）</option>
+            <option value="5">アプリ・ソフトウェア開発（5%）</option>
+            <option value="5">インフラエンジニア・ネットワーク（5%）</option>
+            <option value="3">ITコンサルタント（3%）</option>
+          </optgroup>
+          <optgroup label="🎨 クリエイター・デザイン系">
+            <option value="3">Webデザイナー・グラフィックデザイナー（3%）</option>
+            <option value="3">イラストレーター（3%）</option>
+            <option value="3">UI/UXデザイナー・DTP（3%）</option>
+            <option value="5">動画クリエイター・動画編集（5%）</option>
+            <option value="5">写真撮影・カメラマン（5%）</option>
+            <option value="5">YouTuber・配信者（5%）</option>
+          </optgroup>
+          <optgroup label="✍️ ライター・制作系">
+            <option value="5">ライター・コピーライター（5%）</option>
+            <option value="5">翻訳・通訳（5%）</option>
+            <option value="5">マンガ家・漫画家（5%）</option>
+            <option value="5">音楽制作・作曲（5%）</option>
+          </optgroup>
+          <optgroup label="📢 マーケティング・コンサル系">
+            <option value="3">経営・ビジネスコンサルタント（3%）</option>
+            <option value="3">Webマーケター・SEOコンサルタント（3%）</option>
+            <option value="5">広告代理業（5%）</option>
+          </optgroup>
+          <optgroup label="🏥 医療・士業・専門職">
+            <option value="3">医師・歯科医師（3%）</option>
+            <option value="3">薬剤師（3%）</option>
+            <option value="3">看護師・助産師（3%）</option>
+            <option value="3">獣医師（3%）</option>
+            <option value="3">弁護士・司法書士・行政書士（3%）</option>
+            <option value="3">税理士・公認会計士・社会保険労務士（3%）</option>
+            <option value="3">弁理士・不動産鑑定士（3%）</option>
+          </optgroup>
+          <optgroup label="💆 美容・生活サービス系">
+            <option value="3">美容師・ネイリスト・まつ毛（3%）</option>
+            <option value="3">理容師・バーバー（3%）</option>
+            <option value="3">エステ・整体師（3%）</option>
+            <option value="3">クリーニング業（3%）</option>
+            <option value="5">あん摩・鍼灸師（5%）</option>
+          </optgroup>
+          <optgroup label="🎓 教育・講師系">
+            <option value="3">スポーツインストラクター・パーソナルトレーナー（3%）</option>
+            <option value="3">音楽・ダンス講師（3%）</option>
+            <option value="3">家庭教師・オンライン講師（3%）</option>
+          </optgroup>
+          <optgroup label="🏪 小売・飲食・製造">
+            <option value="5">小売業・ネットショップ（5%）</option>
+            <option value="5">飲食業・カフェ（5%）</option>
+            <option value="5">製造業・ハンドメイド（5%）</option>
+            <option value="5">出版業・印刷業（5%）</option>
+          </optgroup>
+          <optgroup label="🏠 不動産・運輸">
+            <option value="5">不動産賃貸・民泊（5%）</option>
+            <option value="5">運送・配送・軽貨物（5%）</option>
+            <option value="5">不動産売買・仲介（5%）</option>
+          </optgroup>
+          <optgroup label="🌾 農業・非課税業種">
+            <option value="0">農業・林業・漁業（非課税）</option>
+            <option value="0">その他 個人事業税の非課税業種</option>
+          </optgroup>
+          <optgroup label="その他">
+            <option value="4">畜産業・水産業・薪炭製造業（4%）</option>
+            <option value="5">その他 第1種事業（5%）</option>
+            <option value="3">その他 第3種事業（3%）</option>
+          </optgroup>
+        </select>
+        <p class="hint">※ 未選択時は個人事業税 非課税として計算</p>
+      </div>
+
+      <div class="form-group">
+        <label>年齢</label>
+        <select id="age">
+          <option value="under40" selected>39歳以下</option>
+          <option value="40to64">40〜64歳</option>
+          <option value="over65">65歳以上</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>都道府県（国民健康保険料の計算に使用）</label>
+        <select id="prefecture">
+          <option value="北海道">北海道（札幌市）</option>
+          <option value="青森県">青森県（青森市）</option>
+          <option value="岩手県">岩手県（盛岡市）</option>
+          <option value="宮城県">宮城県（仙台市）</option>
+          <option value="秋田県">秋田県（秋田市）</option>
+          <option value="山形県">山形県（山形市）</option>
+          <option value="福島県">福島県（福島市）</option>
+          <option value="茨城県">茨城県（水戸市）</option>
+          <option value="栃木県">栃木県（宇都宮市）</option>
+          <option value="群馬県">群馬県（前橋市）</option>
+          <option value="埼玉県">埼玉県（さいたま市）</option>
+          <option value="千葉県">千葉県（千葉市）</option>
+          <option value="東京都" selected>東京都（新宿区）</option>
+          <option value="神奈川県">神奈川県（横浜市）</option>
+          <option value="新潟県">新潟県（新潟市）</option>
+          <option value="富山県">富山県（富山市）</option>
+          <option value="石川県">石川県（金沢市）</option>
+          <option value="福井県">福井県（福井市）</option>
+          <option value="山梨県">山梨県（甲府市）</option>
+          <option value="長野県">長野県（長野市）</option>
+          <option value="岐阜県">岐阜県（岐阜市）</option>
+          <option value="静岡県">静岡県（静岡市）</option>
+          <option value="愛知県">愛知県（名古屋市）</option>
+          <option value="三重県">三重県（津市）</option>
+          <option value="滋賀県">滋賀県（大津市）</option>
+          <option value="京都府">京都府（京都市）</option>
+          <option value="大阪府">大阪府（大阪市）</option>
+          <option value="兵庫県">兵庫県（神戸市）</option>
+          <option value="奈良県">奈良県（奈良市）</option>
+          <option value="和歌山県">和歌山県（和歌山市）</option>
+          <option value="鳥取県">鳥取県（鳥取市）</option>
+          <option value="島根県">島根県（松江市）</option>
+          <option value="岡山県">岡山県（岡山市）</option>
+          <option value="広島県">広島県（広島市）</option>
+          <option value="山口県">山口県（山口市）</option>
+          <option value="徳島県">徳島県（徳島市）</option>
+          <option value="香川県">香川県（高松市）</option>
+          <option value="愛媛県">愛媛県（松山市）</option>
+          <option value="高知県">高知県（高知市）</option>
+          <option value="福岡県">福岡県（福岡市）</option>
+          <option value="佐賀県">佐賀県（佐賀市）</option>
+          <option value="長崎県">長崎県（長崎市）</option>
+          <option value="熊本県">熊本県（熊本市）</option>
+          <option value="大分県">大分県（大分市）</option>
+          <option value="宮崎県">宮崎県（宮崎市）</option>
+          <option value="鹿児島県">鹿児島県（鹿児島市）</option>
+          <option value="沖縄県">沖縄県（那覇市）</option>
+        </select>
+      </div>
+
+    </div><!-- /form-grid -->
+
+    <!-- その他控除（任意） -->
+    <div class="deductions-wrap">
+      <div class="deductions-header" onclick="toggleDedSection()">
+        <span class="deductions-title">その他控除を入力する（任意）</span>
+        <span class="deductions-subtitle">配偶者・扶養・医療費・生保・地震保険など</span>
+        <span class="deductions-chevron" id="ded-chevron">▼</span>
+      </div>
+      <div class="deductions-body" id="ded-body" style="display:none;">
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">配偶者控除</div>
+            <div class="deduction-desc">配偶者の合計所得が48万円以下（年収103万円以下）の場合</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <label class="deduction-check-label"><input type="checkbox" id="d-spouse"> あり</label>
+          </div>
+        </div>
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">扶養控除（一般：16〜18歳・23〜69歳）</div>
+            <div class="deduction-desc">所得税 −38万円/人・住民税 −33万円/人</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <input class="deduction-input" type="number" id="d-deps" placeholder="0" min="0" max="10" step="1" style="width:4.5rem;">
+            <span class="deduction-unit">人</span>
+          </div>
+        </div>
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">扶養控除（特定：19〜22歳）</div>
+            <div class="deduction-desc">所得税 −63万円/人・住民税 −45万円/人</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <input class="deduction-input" type="number" id="d-deps-sp" placeholder="0" min="0" max="10" step="1" style="width:4.5rem;">
+            <span class="deduction-unit">人</span>
+          </div>
+        </div>
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">医療費控除（年間医療費合計）</div>
+            <div class="deduction-desc">（医療費 − max(所得×5%, 10万円)）が控除額・上限200万円</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <input class="deduction-input" type="number" id="d-medical" placeholder="0" min="0" step="0.1">
+            <span class="deduction-unit">万円</span>
+          </div>
+        </div>
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">生命保険料控除（年間支払額合計）</div>
+            <div class="deduction-desc">所得税 最大4万円・住民税 最大2.8万円</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <input class="deduction-input" type="number" id="d-life" placeholder="0" min="0" step="0.1">
+            <span class="deduction-unit">万円/年</span>
+          </div>
+        </div>
+        <div class="deduction-item">
+          <div class="deduction-label-group">
+            <div class="deduction-name">地震保険料控除（年間支払額）</div>
+            <div class="deduction-desc">所得税 最大5万円・住民税 最大2.5万円</div>
+          </div>
+          <div class="deduction-input-wrap">
+            <input class="deduction-input" type="number" id="d-earthquake" placeholder="0" min="0" step="0.1">
+            <span class="deduction-unit">万円/年</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-calc" onclick="simulate()">節税効果を計算 →</button>
+    <p id="error-msg"></p>
+
+  </div><!-- /input card -->
+
+  <!-- ── 結果 ── -->
+  <div id="result-section" class="hidden">
+
+    <!-- ベースライン -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon blue">📋</div>
+        現在の税負担（節税手段なし）
+      </div>
+      <div class="baseline-grid">
+        <div class="baseline-item">
+          <span class="b-label">事業所得</span>
+          <span class="b-value" id="b-income">—</span>
+        </div>
+        <div class="baseline-item hi-red">
+          <span class="b-label">税金・社保 合計</span>
+          <span class="b-value" id="b-grand">—</span>
+        </div>
+        <div class="baseline-item hi-green">
+          <span class="b-label">可処分所得</span>
+          <span class="b-value" id="b-take">—</span>
+        </div>
+      </div>
+      <div class="baseline-detail" id="b-detail"></div>
+    </div>
+
+    <!-- シミュレーションカード -->
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-icon">💡</div>
+        節税手段のシミュレーション
+      </div>
+
+      <!-- 小規模企業共済 -->
+      <div class="sim-card" id="kyosai-card">
+        <div class="sim-header">
+          <div class="sim-icon">🏦</div>
+          <div>
+            <div class="sim-title">小規模企業共済</div>
+            <div class="sim-desc">廃業・引退時の退職金代わりになる積立制度。掛金は全額所得控除。月額最大70,000円（年84万円）。</div>
+            <span class="sim-badge">💡 掛金全額 所得控除</span>
+          </div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-track-labels">
+            <span>0万円</span><span>21万円</span><span>42万円</span><span>63万円</span><span>84万円</span>
+          </div>
+          <input type="range" id="kyosai-slider" min="0" max="84" step="1" value="0"
+            oninput="onSliderChange('kyosai')" onchange="onSliderChange('kyosai')">
+          <div class="slider-controls">
+            <input class="slider-num-input" type="number" id="kyosai-num" min="0" max="84" step="1" value="0"
+              oninput="onNumChange('kyosai')">
+            <span class="slider-unit-lbl">万円/年</span>
+            <span class="slider-monthly" id="kyosai-monthly">（月額 0円）</span>
+          </div>
+        </div>
+        <div class="savings-grid" id="kyosai-result" style="display:none;">
+          <div class="savings-item">
+            <span class="savings-label">年間節税額</span>
+            <span class="savings-val green" id="kyosai-saving">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">実質コスト（掛金 − 節税額）</span>
+            <span class="savings-val muted" id="kyosai-net">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">うち 所得税・復興税 減少</span>
+            <span class="savings-val" id="kyosai-it">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">うち 住民税 減少</span>
+            <span class="savings-val" id="kyosai-rt">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- iDeCo -->
+      <div class="sim-card" id="ideco-card">
+        <div class="sim-header">
+          <div class="sim-icon">📈</div>
+          <div>
+            <div class="sim-title">iDeCo（個人型確定拠出年金）</div>
+            <div class="sim-desc">自分で運用する私的年金制度。掛金は全額所得控除。自営業者は月額最大68,000円（年81.6万円）。60歳以降に受取可能。</div>
+            <span class="sim-badge">💡 掛金全額 所得控除</span>
+          </div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-track-labels">
+            <span>0万円</span><span>20万円</span><span>41万円</span><span>61万円</span><span>81万円</span>
+          </div>
+          <input type="range" id="ideco-slider" min="0" max="81" step="1" value="0"
+            oninput="onSliderChange('ideco')" onchange="onSliderChange('ideco')">
+          <div class="slider-controls">
+            <input class="slider-num-input" type="number" id="ideco-num" min="0" max="82" step="1" value="0"
+              oninput="onNumChange('ideco')">
+            <span class="slider-unit-lbl">万円/年</span>
+            <span class="slider-monthly" id="ideco-monthly">（月額 0円）</span>
+          </div>
+        </div>
+        <div class="savings-grid" id="ideco-result" style="display:none;">
+          <div class="savings-item">
+            <span class="savings-label">年間節税額</span>
+            <span class="savings-val green" id="ideco-saving">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">実質コスト（掛金 − 節税額）</span>
+            <span class="savings-val muted" id="ideco-net">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">うち 所得税・復興税 減少</span>
+            <span class="savings-val" id="ideco-it">—</span>
+          </div>
+          <div class="savings-item">
+            <span class="savings-label">うち 住民税 減少</span>
+            <span class="savings-val" id="ideco-rt">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ふるさと納税 -->
+      <div class="sim-card" id="furusato-card">
+        <div class="sim-header">
+          <div class="sim-icon">🎁</div>
+          <div>
+            <div class="sim-title">ふるさと納税</div>
+            <div class="sim-desc">全国の自治体に寄付することで、自己負担額2,000円で税額控除と返礼品が受け取れる制度。上限額は住民税所得割をもとに試算。</div>
+            <span class="sim-badge blue">住民税・所得税 から控除</span>
+          </div>
+        </div>
+        <div class="furusato-limit-box" id="furusato-limit-box">
+          <div class="furusato-limit-lbl">ふるさと納税の上限目安（試算）</div>
+          <div class="furusato-limit-val" id="furusato-limit">—</div>
+          <div class="furusato-limit-note">※ 上限まで寄付した場合、実質自己負担は 2,000円</div>
+        </div>
+        <div class="furusato-breakdown">
+          <div class="furusato-item">
+            <span class="furusato-item-lbl">上限目安額</span>
+            <span class="furusato-item-val" id="furusato-limit2">—</span>
+          </div>
+          <div class="furusato-item">
+            <span class="furusato-item-lbl">実質自己負担</span>
+            <span class="furusato-item-val orange">2,000円</span>
+          </div>
+          <div class="furusato-item">
+            <span class="furusato-item-lbl">返礼品の目安（30%）</span>
+            <span class="furusato-item-val green" id="furusato-return">—</span>
+          </div>
+        </div>
+        <p class="furusato-note">
+          ※ 上限額は「住民税所得割 × 20% ÷ (1 − 所得税率 × 1.021 − 0.10) + 2,000円」の算式による概算です。<br>
+          ※ 返礼品は寄付額の30%以内（総務省基準）。実際の返礼品は自治体により異なります。<br>
+          ※ 本試算は免税事業者・給与所得なしの場合を想定しています。正確な上限はふるさと納税サイトのシミュレーターでご確認ください。
+        </p>
+      </div>
+
+    </div><!-- /sim cards container -->
+
+    <!-- 合計節税サマリー -->
+    <div class="summary-hero" id="summary-hero">
+      <!-- JSで描画 -->
+    </div>
+
+  </div><!-- /result-section -->
+
+</main>
+
+<footer>
+  <p>令和7年度（2025年）の税率・料率に基づく概算計算ツールです。<br>
+  正確な申告・納税については税理士または所轄税務署にご相談ください。</p>
+  <p style="margin-top:0.625rem;">🔒 入力された情報はサーバーへの送信・端末への保存は行われません。</p>
+  <p style="margin-top:0.75rem;"><a href="/privacy.html">プライバシーポリシー</a></p>
+</footer>
+
+<script>
+// ── 定数 ─────────────────────────────────────────────────────────────────────
+const INCOME_TAX_TABLE = [
+  { limit: 1_950_000,  rate: 0.05, deduction:         0 },
+  { limit: 3_300_000,  rate: 0.10, deduction:    97_500 },
+  { limit: 6_950_000,  rate: 0.20, deduction:   427_500 },
+  { limit: 9_000_000,  rate: 0.23, deduction:   636_000 },
+  { limit: 18_000_000, rate: 0.33, deduction: 1_536_000 },
+  { limit: 40_000_000, rate: 0.40, deduction: 2_796_000 },
+  { limit: Infinity,   rate: 0.45, deduction: 4_796_000 },
+];
+const BASIC_DEDUCTION_IT   = 480_000;
+const BASIC_DEDUCTION_RT   = 430_000;
+const PENSION_ANNUAL       = 210_120;
+const BUSINESS_TAX_DED     = 2_900_000;
+const NHI_CAP = { m: 660_000, s: 260_000, n: 170_000 };
+
+const NHI_PREFECTURES = [
+  { pref:'北海道',  city:'札幌市',    m:[0.0935,53210], s:[0.0278,16480], n:[0.0254,13480] },
+  { pref:'青森県',  city:'青森市',    m:[0.0971,44760], s:[0.0246,14040], n:[0.0274,13800] },
+  { pref:'岩手県',  city:'盛岡市',    m:[0.0840,45900], s:[0.0260,13300], n:[0.0250,13100] },
+  { pref:'宮城県',  city:'仙台市',    m:[0.0826,53010], s:[0.0317,20350], n:[0.0261,16260] },
+  { pref:'秋田県',  city:'秋田市',    m:[0.1004,26400], s:[0.0328, 8640], n:[0.0226,13920] },
+  { pref:'山形県',  city:'山形市',    m:[0.0942,49500], s:[0.0279,15100], n:[0.0208,13600] },
+  { pref:'福島県',  city:'福島市',    m:[0.0650,40000], s:[0.0250,16700], n:[0.0240,16200] },
+  { pref:'茨城県',  city:'水戸市',    m:[0.0784,30500], s:[0.0344,12600], n:[0.0231,15200] },
+  { pref:'栃木県',  city:'宇都宮市',  m:[0.0695,45900], s:[0.0276,15120], n:[0.0224,12000] },
+  { pref:'群馬県',  city:'前橋市',    m:[0.0901,42840], s:[0.0305,15600], n:[0.0207,15960] },
+  { pref:'埼玉県',  city:'さいたま市',m:[0.0713,38300], s:[0.0260,13500], n:[0.0224,14600] },
+  { pref:'千葉県',  city:'千葉市',    m:[0.0714,47640], s:[0.0290,18960], n:[0.0236,18720] },
+  { pref:'東京都',  city:'新宿区',    m:[0.0771,47300], s:[0.0269,16800], n:[0.0225,16600] },
+  { pref:'神奈川県',city:'横浜市',    m:[0.0728,36931], s:[0.0318,16680], n:[0.0253,17280] },
+  { pref:'新潟県',  city:'新潟市',    m:[0.0760,39900], s:[0.0310,16200], n:[0.0250,14100] },
+  { pref:'富山県',  city:'富山市',    m:[0.0866,44200], s:[0.0295,15000], n:[0.0204,15600] },
+  { pref:'石川県',  city:'金沢市',    m:[0.0908,49200], s:[0.0274,18720], n:[0.0242,18360] },
+  { pref:'福井県',  city:'福井市',    m:[0.0615,43400], s:[0.0280,16200], n:[0.0272,17400] },
+  { pref:'山梨県',  city:'甲府市',    m:[0.0956,37200], s:[0.0309,12480], n:[0.0207,14040] },
+  { pref:'長野県',  city:'長野市',    m:[0.0820,37440], s:[0.0280,13800], n:[0.0260,15840] },
+  { pref:'岐阜県',  city:'岐阜市',    m:[0.0800,57480], s:[0.0237,18000], n:[0.0168,14040] },
+  { pref:'静岡県',  city:'静岡市',    m:[0.0857,46800], s:[0.0291,15000], n:[0.0210,15600] },
+  { pref:'愛知県',  city:'名古屋市',  m:[0.0877,49728], s:[0.0260,15715], n:[0.0227,15906] },
+  { pref:'三重県',  city:'津市',      m:[0.0800,50700], s:[0.0290,18100], n:[0.0290,18500] },
+  { pref:'滋賀県',  city:'大津市',    m:[0.0710,50100], s:[0.0260,18600], n:[0.0250,16200] },
+  { pref:'京都府',  city:'京都市',    m:[0.0827,29840], s:[0.0267, 9990], n:[0.0237,10090] },
+  { pref:'大阪府',  city:'大阪市',    m:[0.0930,67998], s:[0.0302,21795], n:[0.0256,18784] },
+  { pref:'兵庫県',  city:'神戸市',    m:[0.0774,56630], s:[0.0302,21780], n:[0.0267,13960] },
+  { pref:'奈良県',  city:'奈良市',    m:[0.0764,47600], s:[0.0327,11500], n:[0.0303,16900] },
+  { pref:'和歌山県',city:'和歌山市',  m:[0.0988,38400], s:[0.0321,12600], n:[0.0228,14400] },
+  { pref:'鳥取県',  city:'鳥取市',    m:[0.0950,31600], s:[0.0321,10560], n:[0.0220,13560] },
+  { pref:'島根県',  city:'松江市',    m:[0.0798,50940], s:[0.0261,18880], n:[0.0238,16920] },
+  { pref:'岡山県',  city:'岡山市',    m:[0.0815,49200], s:[0.0295,17280], n:[0.0260,16200] },
+  { pref:'広島県',  city:'広島市',    m:[0.0818,61631], s:[0.0264,20411], n:[0.0252,18303] },
+  { pref:'山口県',  city:'山口市',    m:[0.0930,47600], s:[0.0300,15600], n:[0.0310,15300] },
+  { pref:'徳島県',  city:'徳島市',    m:[0.0830,54100], s:[0.0300,19600], n:[0.0260,18900] },
+  { pref:'香川県',  city:'高松市',    m:[0.0988,53400], s:[0.0260,14500], n:[0.0216,14000] },
+  { pref:'愛媛県',  city:'松山市',    m:[0.0949,38400], s:[0.0311,12600], n:[0.0221,15000] },
+  { pref:'高知県',  city:'高知市',    m:[0.0862,49200], s:[0.0350,15000], n:[0.0276,15000] },
+  { pref:'福岡県',  city:'福岡市',    m:[0.0596,38843], s:[0.0328,20091], n:[0.0281,18298] },
+  { pref:'佐賀県',  city:'佐賀市',    m:[0.1070,66000], s:[0.0320,19300], n:[0.0290,16700] },
+  { pref:'長崎県',  city:'長崎市',    m:[0.0930,47500], s:[0.0330,16600], n:[0.0270,14900] },
+  { pref:'熊本県',  city:'熊本市',    m:[0.0634,46500], s:[0.0298,21800], n:[0.0219,16560] },
+  { pref:'大分県',  city:'大分市',    m:[0.0865,52200], s:[0.0249,14600], n:[0.0250,14600] },
+  { pref:'宮崎県',  city:'宮崎市',    m:[0.0870,46800], s:[0.0300,15700], n:[0.0220,14100] },
+  { pref:'鹿児島県',city:'鹿児島市',  m:[0.0949,41400], s:[0.0311,13560], n:[0.0232,15600] },
+  { pref:'沖縄県',  city:'那覇市',    m:[0.1031,36600], s:[0.0328,12240], n:[0.0229,14880] },
+];
+
+// ── ユーティリティ ────────────────────────────────────────────────────────────
+const fmt   = n => Math.round(n).toLocaleString('ja-JP') + '円';
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+function calcIncomeTax(taxable) {
+  if (taxable <= 0) return 0;
+  for (const b of INCOME_TAX_TABLE) {
+    if (taxable <= b.limit) return Math.floor(taxable * b.rate - b.deduction);
+  }
+  return 0;
+}
+
+function getMarginalRate(taxable) {
+  if (taxable <= 0) return 0;
+  for (const b of INCOME_TAX_TABLE) {
+    if (taxable <= b.limit) return b.rate;
+  }
+  return 0.45;
+}
+
+// ── コア計算関数 ──────────────────────────────────────────────────────────────
+function calcTaxes({ revenue, expenses, filing, bizRate, age, prefecture,
+                     kyosai = 0, ideco = 0,
+                     spouse = false, deps = 0, depsSp = 0,
+                     medPaid = 0, lifePaid = 0, eqPaid = 0 }) {
+  const nhiData = NHI_PREFECTURES.find(p => p.pref === prefecture) || NHI_PREFECTURES[12];
+
+  const incomeBeforeDeduction = Math.max(0, revenue - expenses);
+  const businessIncome        = Math.max(0, incomeBeforeDeduction - filing);
+
+  // 個人事業税
+  let bizTax = 0;
+  if (bizRate > 0) {
+    const rawBase  = Math.max(0, incomeBeforeDeduction - BUSINESS_TAX_DED);
+    const taxBase  = Math.floor(rawBase / 1000) * 1000;
+    bizTax = Math.floor(taxBase * (bizRate / 100) / 100) * 100;
+  }
+
+  // 国民年金
+  const pension = age === 'over65' ? 0 : PENSION_ANNUAL;
+
+  // 国民健康保険
+  const nhiFlatMult = businessIncome <= 430_000 ? 0.3
+    : businessIncome <= 720_000 ? 0.5
+    : businessIncome <= 965_000 ? 0.8
+    : 1.0;
+  const nhiBase    = Math.max(0, businessIncome - BASIC_DEDUCTION_RT);
+  const mFlatRed   = Math.floor(nhiData.m[1] * nhiFlatMult);
+  const sFlatRed   = Math.floor(nhiData.s[1] * nhiFlatMult);
+  const nFlatRed   = Math.floor(nhiData.n[1] * nhiFlatMult);
+  const nhiMedical = clamp(Math.floor(nhiBase * nhiData.m[0]) + mFlatRed, mFlatRed, NHI_CAP.m);
+  const nhiSupport = clamp(Math.floor(nhiBase * nhiData.s[0]) + sFlatRed, sFlatRed, NHI_CAP.s);
+  const nhiNursing = age === '40to64'
+    ? clamp(Math.floor(nhiBase * nhiData.n[0]) + nFlatRed, nFlatRed, NHI_CAP.n) : 0;
+  const nhiTotal      = nhiMedical + nhiSupport + nhiNursing;
+  const socialDed     = nhiTotal + pension;
+
+  // その他控除
+  const spouseIT  = spouse ? 380_000 : 0;
+  const spouseRT  = spouse ? 330_000 : 0;
+  const depsIT    = deps * 380_000 + depsSp * 630_000;
+  const depsRT    = deps * 330_000 + depsSp * 450_000;
+  const medBase   = Math.max(businessIncome * 0.05, 100_000);
+  const medicalIT = Math.min(Math.max(0, medPaid - medBase), 2_000_000);
+  const medicalRT = medicalIT;
+  const lifeIT = lifePaid <= 0 ? 0 : lifePaid <= 20_000 ? lifePaid
+    : lifePaid <= 40_000 ? Math.floor(lifePaid / 2) + 10_000
+    : lifePaid <= 80_000 ? Math.floor(lifePaid / 4) + 20_000 : 40_000;
+  const lifeRT = lifePaid <= 0 ? 0 : lifePaid <= 12_000 ? lifePaid
+    : lifePaid <= 32_000 ? Math.floor(lifePaid / 2) + 6_000
+    : lifePaid <= 56_000 ? Math.floor(lifePaid / 4) + 14_000 : 28_000;
+  const eqIT = Math.min(eqPaid, 50_000);
+  const eqRT = Math.min(Math.floor(eqPaid / 2), 25_000);
+
+  const totalAddIT = kyosai + ideco + spouseIT + depsIT + medicalIT + lifeIT + eqIT;
+  const totalAddRT = kyosai + ideco + spouseRT + depsRT + medicalRT + lifeRT + eqRT;
+
+  // 所得税
+  const taxableForIT    = Math.max(0, businessIncome - socialDed - BASIC_DEDUCTION_IT - totalAddIT);
+  const incomeTax       = calcIncomeTax(taxableForIT);
+  const specialTax      = Math.floor(incomeTax * 0.021);
+  const incomeTaxTotal  = incomeTax + specialTax;
+
+  // 住民税
+  const taxableForRT       = Math.max(0, businessIncome - socialDed - BASIC_DEDUCTION_RT - totalAddRT);
+  const residentIncomeLevy = Math.floor(taxableForRT * 0.10);
+  const isResidentTaxable  = businessIncome > 450_000;
+  const residentFlatLevy   = isResidentTaxable ? 5_000 : 0;
+  const forestTax          = isResidentTaxable ? 1_000 : 0;
+  const residentTotal      = residentIncomeLevy + residentFlatLevy + forestTax;
+
+  const grandTotal      = incomeTaxTotal + residentTotal + bizTax + nhiTotal + pension;
+  const disposableIncome = Math.max(0, revenue - expenses - grandTotal);
+
+  return {
+    incomeBeforeDeduction, businessIncome,
+    bizTax, pension, nhiTotal, socialDed,
+    taxableForIT, taxableForRT, residentIncomeLevy,
+    incomeTaxTotal, residentTotal, grandTotal, disposableIncome,
+  };
+}
+
+// ── ふるさと納税 上限計算 ────────────────────────────────────────────────────
+function calcFurusatoLimit(residentIncomeLevy, taxableForIT) {
+  if (residentIncomeLevy <= 0) return 0;
+  const rate  = getMarginalRate(taxableForIT);
+  const denom = 1 - rate * 1.021 - 0.10;
+  if (denom <= 0) return 0;
+  return Math.max(0, Math.floor((residentIncomeLevy * 0.20) / denom) + 2000);
+}
+
+// ── UIヘルパー ────────────────────────────────────────────────────────────────
+function toggleDedSection() {
+  const body    = document.getElementById('ded-body');
+  const chevron = document.getElementById('ded-chevron');
+  const isOpen  = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function onSliderChange(key) {
+  const slider = document.getElementById(key + '-slider');
+  const numIn  = document.getElementById(key + '-num');
+  numIn.value  = slider.value;
+  updateMonthly(key, parseInt(slider.value));
+  updateSimSavings();
+}
+
+function onNumChange(key) {
+  const numIn   = document.getElementById(key + '-num');
+  const slider  = document.getElementById(key + '-slider');
+  const maxVal  = key === 'kyosai' ? 84 : 82;
+  const clamped = clamp(parseFloat(numIn.value) || 0, 0, maxVal);
+  numIn.value   = clamped;
+  slider.value  = Math.min(clamped, parseInt(slider.max));
+  updateMonthly(key, clamped);
+  updateSimSavings();
+}
+
+function updateMonthly(key, mannen) {
+  const monthly = Math.round((mannen * 10_000) / 12);
+  document.getElementById(key + '-monthly').textContent =
+    '（月額 ' + monthly.toLocaleString('ja-JP') + '円）';
+}
+
+// ── 入力読み取り ──────────────────────────────────────────────────────────────
+function getBaseParams() {
+  const man = 10_000;
+  return {
+    revenue:    (parseFloat(document.getElementById('revenue').value)   || 0) * man,
+    expenses:   (parseFloat(document.getElementById('expenses').value)  || 0) * man,
+    filing:     parseFloat(document.querySelector('input[name="filing"]:checked').value),
+    bizRate:    parseFloat(document.getElementById('business-type').value) || 0,
+    age:        document.getElementById('age').value,
+    prefecture: document.getElementById('prefecture').value,
+    spouse:     document.getElementById('d-spouse').checked,
+    deps:       Math.max(0, parseInt(document.getElementById('d-deps').value)    || 0),
+    depsSp:     Math.max(0, parseInt(document.getElementById('d-deps-sp').value) || 0),
+    medPaid:    (parseFloat(document.getElementById('d-medical').value)    || 0) * man,
+    lifePaid:   (parseFloat(document.getElementById('d-life').value)       || 0) * man,
+    eqPaid:     (parseFloat(document.getElementById('d-earthquake').value) || 0) * man,
+  };
+}
+
+// ── メイン：計算実行 ─────────────────────────────────────────────────────────
+let _baseParams = null;
+let _baseline   = null;
+
+function simulate() {
+  const errEl = document.getElementById('error-msg');
+  const params = getBaseParams();
+
+  if (!params.revenue) {
+    errEl.textContent = '年間売上を入力してください。'; errEl.style.display = 'block'; return;
+  }
+  errEl.style.display = 'none';
+
+  _baseParams = params;
+  _baseline   = calcTaxes({ ..._baseParams, kyosai: 0, ideco: 0 });
+
+  // ベースライン表示
+  document.getElementById('b-income').textContent = fmt(_baseline.incomeBeforeDeduction);
+  document.getElementById('b-grand').textContent  = fmt(_baseline.grandTotal);
+  document.getElementById('b-take').textContent   = fmt(_baseline.disposableIncome);
+
+  const d = _baseline;
+  document.getElementById('b-detail').innerHTML =
+    `<span>所得税・復興税: ${fmt(d.incomeTaxTotal)}</span>` +
+    `<span>住民税: ${fmt(d.residentTotal)}</span>` +
+    (d.bizTax > 0 ? `<span>個人事業税: ${fmt(d.bizTax)}</span>` : '') +
+    `<span>国保: ${fmt(d.nhiTotal)}</span>` +
+    (d.pension > 0 ? `<span>国民年金: ${fmt(d.pension)}</span>` : '');
+
+  // ふるさと納税 上限
+  const furusatoLimit = calcFurusatoLimit(_baseline.residentIncomeLevy, _baseline.taxableForIT);
+  const furusatoReturn = Math.floor(furusatoLimit * 0.30);
+  document.getElementById('furusato-limit').textContent  = fmt(furusatoLimit);
+  document.getElementById('furusato-limit2').textContent = fmt(furusatoLimit);
+  document.getElementById('furusato-return').textContent = fmt(furusatoReturn);
+
+  // スライダーを 0 にリセット
+  ['kyosai', 'ideco'].forEach(k => {
+    document.getElementById(k + '-slider').value = 0;
+    document.getElementById(k + '-num').value    = 0;
+    updateMonthly(k, 0);
+  });
+
+  // 結果セクション表示
+  document.getElementById('result-section').classList.remove('hidden');
+  updateSimSavings();
+  document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── シミュレーション更新（スライダー連動） ────────────────────────────────────
+function updateSimSavings() {
+  if (!_baseline) return;
+
+  const kyosaiAnnual = clamp((parseFloat(document.getElementById('kyosai-num').value) || 0) * 10_000, 0, 840_000);
+  const idecoAnnual  = clamp((parseFloat(document.getElementById('ideco-num').value)  || 0) * 10_000, 0, 816_000);
+
+  // 各手段の節税額を単独計算
+  const withKyosai = calcTaxes({ ..._baseParams, kyosai: kyosaiAnnual, ideco: 0 });
+  const withIdeco  = calcTaxes({ ..._baseParams, kyosai: 0, ideco: idecoAnnual });
+  const withBoth   = calcTaxes({ ..._baseParams, kyosai: kyosaiAnnual, ideco: idecoAnnual });
+
+  const kyosaiITSave = _baseline.incomeTaxTotal - withKyosai.incomeTaxTotal;
+  const kyosaiRTSave = _baseline.residentTotal  - withKyosai.residentTotal;
+  const kyosaiTotal  = kyosaiITSave + kyosaiRTSave;
+
+  const idecoITSave  = _baseline.incomeTaxTotal - withIdeco.incomeTaxTotal;
+  const idecoRTSave  = _baseline.residentTotal  - withIdeco.residentTotal;
+  const idecoTotal   = idecoITSave + idecoRTSave;
+
+  const combinedSaving = _baseline.grandTotal - withBoth.grandTotal;
+
+  // 小規模企業共済カード
+  const kyosaiCard = document.getElementById('kyosai-card');
+  const kyosaiRes  = document.getElementById('kyosai-result');
+  if (kyosaiAnnual > 0) {
+    kyosaiCard.classList.add('has-value');
+    kyosaiRes.style.display = 'grid';
+    document.getElementById('kyosai-saving').textContent = '+' + fmt(kyosaiTotal);
+    document.getElementById('kyosai-net').textContent    = fmt(Math.max(0, kyosaiAnnual - kyosaiTotal));
+    document.getElementById('kyosai-it').textContent     = fmt(kyosaiITSave);
+    document.getElementById('kyosai-rt').textContent     = fmt(kyosaiRTSave);
+  } else {
+    kyosaiCard.classList.remove('has-value');
+    kyosaiRes.style.display = 'none';
+  }
+
+  // iDeCoカード
+  const idecoCard = document.getElementById('ideco-card');
+  const idecoRes  = document.getElementById('ideco-result');
+  if (idecoAnnual > 0) {
+    idecoCard.classList.add('has-value');
+    idecoRes.style.display = 'grid';
+    document.getElementById('ideco-saving').textContent = '+' + fmt(idecoTotal);
+    document.getElementById('ideco-net').textContent    = fmt(Math.max(0, idecoAnnual - idecoTotal));
+    document.getElementById('ideco-it').textContent     = fmt(idecoITSave);
+    document.getElementById('ideco-rt').textContent     = fmt(idecoRTSave);
+  } else {
+    idecoCard.classList.remove('has-value');
+    idecoRes.style.display = 'none';
+  }
+
+  // サマリー描画
+  renderSummary(kyosaiAnnual, idecoAnnual, kyosaiTotal, idecoTotal, combinedSaving, withBoth);
+}
+
+function renderSummary(kyosaiAnnual, idecoAnnual, kyosaiSave, idecoSave, combinedSave, withBoth) {
+  const el = document.getElementById('summary-hero');
+  if (kyosaiAnnual === 0 && idecoAnnual === 0) {
+    el.innerHTML = `
+      <div class="summary-hero-title">合計節税効果</div>
+      <div class="sum-zero-note">小規模企業共済またはiDeCoの金額を設定すると<br>合計節税効果が表示されます</div>`;
+    return;
+  }
+
+  let rows = '';
+  if (kyosaiAnnual > 0) rows += `
+    <div class="sum-row">
+      <span class="sum-row-lbl">🏦 小規模企業共済（年${(kyosaiAnnual/10000).toFixed(0)}万円）</span>
+      <span class="sum-row-val">+${fmt(kyosaiSave)}</span>
+    </div>`;
+  if (idecoAnnual > 0) rows += `
+    <div class="sum-row">
+      <span class="sum-row-lbl">📈 iDeCo（年${(idecoAnnual/10000).toFixed(0)}万円）</span>
+      <span class="sum-row-val">+${fmt(idecoSave)}</span>
+    </div>`;
+
+  el.innerHTML = `
+    <div class="summary-hero-title">合計節税効果（税金・社保合計の減少額）</div>
+    ${rows}
+    <hr class="sum-divider">
+    <div class="sum-total">
+      <span class="sum-total-lbl">合計 節税額</span>
+      <span class="sum-total-val">+${fmt(combinedSave)}</span>
+    </div>
+    <div class="sum-footer">
+      <div class="sum-footer-item">
+        <span class="sum-footer-lbl">節税後の税金・社保 合計</span>
+        <span class="sum-footer-val">${fmt(withBoth.grandTotal)}</span>
+      </div>
+      <div class="sum-footer-item">
+        <span class="sum-footer-lbl">節税後の可処分所得</span>
+        <span class="sum-footer-val">${fmt(withBoth.disposableIncome)}</span>
+      </div>
+    </div>`;
+}
+
+// ── localStorageからデータ引き継ぎ ────────────────────────────────────────────
+(function loadFromStorage() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('setsuze_base') || 'null'); } catch(e) { return; }
+  if (!data) return;
+
+  const man = 10_000;
+  if (data.revenue  != null) document.getElementById('revenue').value   = Math.round(data.revenue  / man);
+  if (data.expenses != null) document.getElementById('expenses').value  = Math.round(data.expenses / man);
+  if (data.filing   != null) {
+    const radio = document.querySelector(`input[name="filing"][value="${data.filing}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.bizRate != null) {
+    const sel = document.getElementById('business-type');
+    for (const opt of sel.options) {
+      if (opt.value === String(data.bizRate)) { opt.selected = true; break; }
+    }
+  }
+  if (data.age != null) document.getElementById('age').value = data.age;
+  if (data.prefecture != null) document.getElementById('prefecture').value = data.prefecture;
+
+  // その他控除
+  if (data.spouse   != null) document.getElementById('d-spouse').checked = data.spouse;
+  if (data.deps     != null && data.deps     > 0) document.getElementById('d-deps').value    = data.deps;
+  if (data.depsSp   != null && data.depsSp   > 0) document.getElementById('d-deps-sp').value = data.depsSp;
+  if (data.medPaid  != null && data.medPaid  > 0) document.getElementById('d-medical').value   = (data.medPaid  / man).toFixed(1);
+  if (data.lifePaid != null && data.lifePaid > 0) document.getElementById('d-life').value       = (data.lifePaid / man).toFixed(1);
+  if (data.eqPaid   != null && data.eqPaid   > 0) document.getElementById('d-earthquake').value = (data.eqPaid   / man).toFixed(1);
+
+  if (data.spouse || data.deps > 0 || data.depsSp > 0 ||
+      data.medPaid > 0 || data.lifePaid > 0 || data.eqPaid > 0) {
+    document.getElementById('ded-body').style.display = 'block';
+    document.getElementById('ded-chevron').classList.add('open');
+  }
+
+  document.getElementById('from-main-notice').classList.remove('hidden');
+})();
+</script>
+</body>
+</html>
