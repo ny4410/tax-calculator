@@ -189,6 +189,67 @@ header p { opacity: 0.8; font-size: 0.875rem; margin-top: 0.375rem; }
   font-weight: 600;
 }
 
+/* ── その他控除セクション ── */
+.deductions-wrap {
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 0.25rem;
+}
+.deductions-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1rem; cursor: pointer;
+  background: var(--gray-light); user-select: none; transition: background 0.15s;
+}
+.deductions-header:hover { background: #eef2ff; }
+.deductions-title { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+.deductions-subtitle { font-size: 0.78rem; color: var(--text-muted); flex: 1; }
+.deductions-chevron {
+  font-size: 0.65rem; color: var(--text-muted);
+  transition: transform 0.2s; display: inline-block;
+}
+.deductions-chevron.open { transform: rotate(180deg); }
+.deductions-body { border-top: 1px solid var(--border); padding: 0.75rem 1rem; background: #fff; }
+.deduction-item {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 0.75rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border);
+}
+.deduction-item:last-child { border-bottom: none; padding-bottom: 0; }
+.deduction-label-group { flex: 1; min-width: 0; }
+.deduction-name {
+  font-size: 0.84rem; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.2rem;
+}
+.deduction-desc { font-size: 0.76rem; color: var(--text-muted); }
+.badge-ded-green {
+  font-size: 0.67rem; background: #dcfce7; color: #15803d;
+  border-radius: 100px; padding: 0.1rem 0.45rem; font-weight: 600; white-space: nowrap;
+}
+.badge-ded-blue {
+  font-size: 0.67rem; background: var(--blue-light); color: var(--blue-dark);
+  border-radius: 100px; padding: 0.1rem 0.45rem; font-weight: 500; white-space: nowrap;
+}
+.deduction-input-wrap { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+.deduction-input {
+  width: 6rem; text-align: right; padding: 0.3rem 0.45rem;
+  border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; color: var(--text);
+  background: #fff; -moz-appearance: textfield;
+}
+.deduction-input::-webkit-outer-spin-button,
+.deduction-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.deduction-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(37,99,235,0.12); }
+.deduction-unit { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+.deduction-check-label {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.85rem; color: var(--text); cursor: pointer; white-space: nowrap;
+}
+.biz-tip {
+  margin-top: 0.625rem; padding: 0.5rem 0.75rem;
+  background: #fffbeb; border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0; font-size: 0.78rem; color: #78350f; display: none;
+}
+@media (max-width: 600px) {
+  .deduction-item { flex-direction: column; gap: 0.375rem; }
+  .deduction-input-wrap { align-self: flex-end; }
+}
+
 /* ── Main layout ── */
 main { max-width: 820px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
 
@@ -273,8 +334,7 @@ input[type="number"]:focus, select:focus {
 .summary-total { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-top: 0.25rem; }
 .summary-note { font-size: 0.8125rem; opacity: 0.75; margin-top: 0.25rem; }
 
-.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.25rem; }
-@media (max-width: 420px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1.25rem; }
 .summary-item {
   background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.2);
   border-radius: 8px; padding: 0.875rem;
@@ -589,7 +649,7 @@ textarea:focus {
   .summary-hero h2 { font-size: 0.8125rem; }
   .summary-total { font-size: 1.65rem; letter-spacing: -0.025em; }
   .summary-note  { font-size: 0.72rem; }
-  .summary-grid  { grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+  .summary-grid  { gap: 0.5rem; margin-top: 1rem; }
   .summary-item  { padding: 0.625rem 0.75rem; border-radius: 6px; }
   .summary-item-label { font-size: 0.7rem; }
   .summary-item-value { font-size: 0.9rem; margin-top: 0.15rem; }
@@ -681,7 +741,6 @@ textarea:focus {
 @media (max-width: 360px) {
   header h1 { font-size: 1.125rem; }
   .summary-total { font-size: 1.45rem; }
-  .summary-grid  { grid-template-columns: 1fr; }
   .card { padding: 0.875rem 0.75rem; }
 }
 </style>
@@ -865,7 +924,7 @@ textarea:focus {
       <!-- 業種 -->
       <div class="form-group full">
         <label>業種（個人事業税の税率に影響）<span class="required"> *</span></label>
-        <select id="business-type" autocomplete="off">
+        <select id="business-type" autocomplete="off" onchange="updateBizTypeTip()">
           <option value="" selected disabled>― 業種を選択してください ―</option>
           <optgroup label="🖥️ IT・エンジニア系">
             <option value="5">Webエンジニア・プログラマー・システム開発（請負業｜第1種 5%）</option>
@@ -999,6 +1058,142 @@ textarea:focus {
             </span>
           </label>
         </div>
+      </div>
+
+      <!-- その他控除（任意） -->
+      <div class="form-group full">
+        <label>その他控除（任意）</label>
+        <div class="deductions-wrap">
+          <div class="deductions-header" onclick="toggleDeductions(this)">
+            <span class="deductions-title">🎯 節税控除を追加する</span>
+            <span class="deductions-subtitle">小規模企業共済・iDeCo・配偶者控除など</span>
+            <span class="deductions-chevron" id="deductions-chevron">▼</span>
+          </div>
+          <div class="deductions-body" id="deductions-body" style="display:none;">
+
+            <!-- 小規模企業共済 -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  小規模企業共済掛金
+                  <span class="badge-ded-green">💡 全額控除</span>
+                </div>
+                <div class="deduction-desc">月額最大7万円（年84万円）｜廃業・引退時の退職金代わり</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-kyosai" placeholder="0" min="0" max="84" step="0.1">
+                <span class="deduction-unit">万円/年</span>
+              </div>
+            </div>
+
+            <!-- iDeCo -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  iDeCo（個人型確定拠出年金）掛金
+                  <span class="badge-ded-green">💡 全額控除</span>
+                </div>
+                <div class="deduction-desc">自営業者は月額最大6.8万円（年81.6万円）｜60歳以降に受取</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-ideco" placeholder="0" min="0" max="81.6" step="0.1">
+                <span class="deduction-unit">万円/年</span>
+              </div>
+            </div>
+
+            <!-- 配偶者控除 -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  配偶者控除
+                  <span class="badge-ded-blue">所得税 −38万／住民税 −33万</span>
+                </div>
+                <div class="deduction-desc">配偶者の合計所得が48万円以下（年収103万円以下）の場合</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <label class="deduction-check-label">
+                  <input type="checkbox" id="d-spouse"> あり
+                </label>
+              </div>
+            </div>
+
+            <!-- 扶養控除（一般） -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  扶養控除（一般）
+                  <span class="badge-ded-blue">所得税 −38万/人・住民税 −33万/人</span>
+                </div>
+                <div class="deduction-desc">16〜18歳・23〜69歳の扶養親族（合計所得48万円以下）</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-dependents" placeholder="0" min="0" max="10" step="1" style="width:4.5rem;">
+                <span class="deduction-unit">人</span>
+              </div>
+            </div>
+
+            <!-- 扶養控除（特定） -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  扶養控除（特定扶養：19〜22歳）
+                  <span class="badge-ded-blue">所得税 −63万/人・住民税 −45万/人</span>
+                </div>
+                <div class="deduction-desc">19歳以上22歳以下の扶養親族（合計所得48万円以下）</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-dependents-sp" placeholder="0" min="0" max="10" step="1" style="width:4.5rem;">
+                <span class="deduction-unit">人</span>
+              </div>
+            </div>
+
+            <!-- 医療費控除 -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">医療費控除（年間医療費の合計）</div>
+                <div class="deduction-desc">（医療費合計 − max(事業所得×5%, 10万円)）が控除額・上限200万円</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-medical" placeholder="0" min="0" step="0.1">
+                <span class="deduction-unit">万円</span>
+              </div>
+            </div>
+
+            <!-- 生命保険料控除 -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  生命保険料控除（年間支払額合計）
+                  <span class="badge-ded-blue">所得税 最大4万・住民税 最大2.8万</span>
+                </div>
+                <div class="deduction-desc">一般・医療・個人年金の各区分ごとに上限あり（区分ごと入力で精度向上）</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-life" placeholder="0" min="0" step="0.1">
+                <span class="deduction-unit">万円/年</span>
+              </div>
+            </div>
+
+            <!-- 地震保険料控除 -->
+            <div class="deduction-item">
+              <div class="deduction-label-group">
+                <div class="deduction-name">
+                  地震保険料控除（年間支払額）
+                  <span class="badge-ded-blue">所得税 最大5万・住民税 最大2.5万</span>
+                </div>
+                <div class="deduction-desc">地震保険料の全額が控除（上限5万円）</div>
+              </div>
+              <div class="deduction-input-wrap">
+                <input class="deduction-input" type="number" id="d-earthquake" placeholder="0" min="0" step="0.1">
+                <span class="deduction-unit">万円/年</span>
+              </div>
+            </div>
+
+            <!-- 業種別アドバイス -->
+            <div class="biz-tip" id="biz-tip"></div>
+
+          </div><!-- /deductions-body -->
+        </div><!-- /deductions-wrap -->
       </div>
 
     </div>
@@ -1411,6 +1606,104 @@ function calcIncomeTax(taxable) {
   return 0; // フォールバック（Infinityバケットで通常到達しない）
 }
 
+// ── その他控除 ───────────────────────────────────────────────────────────
+function toggleDeductions(header) {
+  const body    = document.getElementById('deductions-body');
+  const chevron = document.getElementById('deductions-chevron');
+  const isOpen  = body.style.display !== 'none';
+  body.style.display  = isOpen ? 'none' : 'block';
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function updateBizTypeTip() {
+  const sel  = document.getElementById('business-type');
+  const opt  = sel.options[sel.selectedIndex];
+  const tipEl = document.getElementById('biz-tip');
+  if (!opt || !opt.value || !tipEl) return;
+  const t = opt.text;
+  let tip = '';
+  if (/IT|エンジニア|プログラマー|システム|アプリ|インフラ/.test(t))
+    tip = '💻 ITエンジニアは高所得になりやすいため、小規模企業共済（月額最大7万）＋iDeCo（月額最大6.8万）を上限まで活用すると年間最大約165万円の所得控除が可能です。';
+  else if (/デザイナー|イラスト|UI|DTP|動画|写真|YouTube|ライター|翻訳|マンガ|音楽/.test(t))
+    tip = '🎨 クリエイター・ライター系は収入が変動しやすいため、小規模企業共済（掛金の増減が柔軟）とiDeCoを組み合わせた節税が有効です。';
+  else if (/コンサルタント|マーケター|SEO|広告/.test(t))
+    tip = '📢 コンサルタント・マーケター系は小規模企業共済・iDeCoの活用で課税所得を大幅に圧縮できます。収入が安定する年に上限まで拠出を検討しましょう。';
+  else if (/医師|歯科|薬剤師|看護|獣医/.test(t))
+    tip = '🏥 医師・医療職は収入が高くなりやすいため、小規模企業共済とiDeCoの節税効果が特に大きくなります。両方を上限まで活用することをお勧めします。';
+  else if (/弁護士|司法書士|行政書士|税理士|会計士|社会保険|弁理士|不動産鑑定/.test(t))
+    tip = '⚖️ 士業は小規模企業共済（廃業時の退職金代わり）とiDeCoの併用が特に有効です。高収入ほど高い税率で控除が効くため、早めの加入をお勧めします。';
+  else if (/美容|理容|ネイル|まつ毛|エステ|整体|クリーニング/.test(t))
+    tip = '✂️ 美容・サービス業は小規模企業共済への加入が特にお勧めです。廃業・引退時に退職金として受け取れ、加入中は全額所得控除になります。';
+  else if (/スポーツ|パーソナル|音楽|ピアノ|ダンス|家庭教師|講師/.test(t))
+    tip = '🎓 教育・講師業は比較的収入が安定するため、小規模企業共済・iDeCoで将来の備えと節税を同時に実現できます。';
+  else if (/小売|ネットショップ|飲食|カフェ|製造|ハンドメイド|出版|印刷/.test(t))
+    tip = '🏪 小売・飲食・製造業は原価・経費が多い分、iDeCo・小規模企業共済で追加の所得控除を積み上げることが重要です。';
+  else if (/不動産|民泊|駐車場|運送|配送|軽貨物/.test(t))
+    tip = '🏠 不動産・運輸業は減価償却費の他、小規模企業共済・iDeCoの活用で課税所得をさらに圧縮できます。';
+  else if (/農業|林業|漁業/.test(t))
+    tip = '🌾 農業・林業・漁業は個人事業税が非課税ですが、iDeCo・小規模企業共済による所得税・住民税の節税は有効です。将来の備えと節税を同時に実現できます。';
+  else
+    tip = '💡 小規模企業共済（月額最大7万）・iDeCo（月額最大6.8万）はすべての自営業者が利用できる代表的な節税手段です。';
+
+  tipEl.textContent = tip;
+  tipEl.style.display = 'block';
+}
+
+function getAdditionalDeductions(businessIncome) {
+  const man = 10_000;
+  const kyosai  = Math.min((parseFloat(document.getElementById('d-kyosai').value)       || 0) * man, 840_000);
+  const ideco   = Math.min((parseFloat(document.getElementById('d-ideco').value)         || 0) * man, 816_000);
+  const spouse  = document.getElementById('d-spouse').checked;
+  const deps    = Math.max(0, parseInt(document.getElementById('d-dependents').value)    || 0);
+  const depsSp  = Math.max(0, parseInt(document.getElementById('d-dependents-sp').value) || 0);
+  const medPaid = (parseFloat(document.getElementById('d-medical').value)    || 0) * man;
+  const lifePaid= (parseFloat(document.getElementById('d-life').value)       || 0) * man;
+  const eqPaid  = (parseFloat(document.getElementById('d-earthquake').value) || 0) * man;
+
+  // 配偶者控除
+  const spouseIT = spouse ? 380_000 : 0;
+  const spouseRT = spouse ? 330_000 : 0;
+
+  // 扶養控除（一般38万・特定63万 / 住民税: 一般33万・特定45万）
+  const depsIT = deps * 380_000 + depsSp * 630_000;
+  const depsRT = deps * 330_000 + depsSp * 450_000;
+
+  // 医療費控除（控除額 = 医療費 − max(所得×5%, 10万)、上限200万）
+  const medBase    = Math.max(businessIncome * 0.05, 100_000);
+  const medicalIT  = Math.min(Math.max(0, medPaid - medBase), 2_000_000);
+  const medicalRT  = medicalIT;
+
+  // 生命保険料控除（新制度・1区分として計算、上限4万[IT]/2.8万[RT]）
+  const lifeIT = (() => {
+    if (lifePaid <= 0)       return 0;
+    if (lifePaid <= 20_000)  return lifePaid;
+    if (lifePaid <= 40_000)  return Math.floor(lifePaid / 2) + 10_000;
+    if (lifePaid <= 80_000)  return Math.floor(lifePaid / 4) + 20_000;
+    return 40_000;
+  })();
+  const lifeRT = (() => {
+    if (lifePaid <= 0)       return 0;
+    if (lifePaid <= 12_000)  return lifePaid;
+    if (lifePaid <= 32_000)  return Math.floor(lifePaid / 2) + 6_000;
+    if (lifePaid <= 56_000)  return Math.floor(lifePaid / 4) + 14_000;
+    return 28_000;
+  })();
+
+  // 地震保険料控除（所得税: 全額・上限5万 / 住民税: 1/2・上限2.5万）
+  const eqIT = Math.min(eqPaid, 50_000);
+  const eqRT = Math.min(Math.floor(eqPaid / 2), 25_000);
+
+  return {
+    kyosai, ideco, spouse, spouseIT, spouseRT,
+    deps, depsSp, depsIT, depsRT,
+    medPaid, medBase, medicalIT, medicalRT,
+    lifePaid, lifeIT, lifeRT,
+    eqPaid, eqIT, eqRT,
+    totalIT: kyosai + ideco + spouseIT + depsIT + medicalIT + lifeIT + eqIT,
+    totalRT: kyosai + ideco + spouseRT + depsRT + medicalRT + lifeRT + eqRT,
+  };
+}
+
 // ── 入力モード切替 ────────────────────────────────────────────────────────
 function setInputMode(mode) {
   const isMonthly = mode === 'monthly';
@@ -1555,14 +1848,17 @@ function calculate() {
   // ⑤ 社会保険料控除
   const socialDeduction = nhiTotal + pension;
 
+  // ⑤′ その他控除（小規模企業共済・iDeCo・配偶者・扶養・医療費・生保・地震）
+  const addDed = getAdditionalDeductions(businessIncome);
+
   // ⑥ 所得税
-  const taxableForIT  = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_IT);
+  const taxableForIT  = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_IT - addDed.totalIT);
   const incomeTax     = calcIncomeTax(taxableForIT);
   const specialTax    = Math.floor(incomeTax * 0.021);
   const incomeTaxTotal = incomeTax + specialTax;
 
   // ⑦ 住民税（全国共通：所得割10% + 均等割5,000円 + 森林環境税1,000円）
-  const taxableForRT       = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_RT);
+  const taxableForRT       = Math.max(0, businessIncome - socialDeduction - BASIC_DEDUCTION_RT - addDed.totalRT);
   const residentIncomeLevy = Math.floor(taxableForRT * 0.10);
   // 均等割・森林環境税：合計所得金額（事業所得）が45万円超で課税（単身者基準の近似）
   // taxableForRT > 0 では、社会保険料が高い場合に均等割が消えるため businessIncome で判定する
@@ -1638,7 +1934,7 @@ function calculate() {
     incomeTax, specialTax, incomeTaxTotal,
     taxableForIT, taxableForRT,
     residentIncomeLevy, residentFlatLevy, forestTax, residentTotal,
-    socialDeduction, grandTotal,
+    socialDeduction, grandTotal, addDed,
   });
 
   const section = document.getElementById('result-section');
@@ -1701,6 +1997,13 @@ function renderTaxList(d) {
         { label: filingLabel + (filingCapped ? '（所得を上限に適用）' : ''), value: `▲${fmt(effectiveFiling)}`, cls: 'minus' },
         { label: '事業所得',   value: fmt(d.businessIncome) },
         { label: '社会保険料控除（国民健康保険 + 年金）', value: `▲${fmt(d.socialDeduction)}`, cls: 'minus' },
+        ...(d.addDed.kyosai   > 0 ? [{ label: '小規模企業共済等掛金控除', value: `▲${fmt(d.addDed.kyosai)}`, cls: 'minus' }] : []),
+        ...(d.addDed.ideco    > 0 ? [{ label: 'iDeCo掛金控除（小規模企業共済等掛金控除）', value: `▲${fmt(d.addDed.ideco)}`, cls: 'minus' }] : []),
+        ...(d.addDed.spouseIT > 0 ? [{ label: '配偶者控除', value: `▲${fmt(d.addDed.spouseIT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.depsIT   > 0 ? [{ label: `扶養控除（一般${d.addDed.deps}人・特定${d.addDed.depsSp}人）`, value: `▲${fmt(d.addDed.depsIT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.medicalIT> 0 ? [{ label: `医療費控除（医療費${fmt(d.addDed.medPaid)} − 基準額${fmt(d.addDed.medBase)}）`, value: `▲${fmt(d.addDed.medicalIT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.lifeIT   > 0 ? [{ label: '生命保険料控除', value: `▲${fmt(d.addDed.lifeIT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.eqIT     > 0 ? [{ label: '地震保険料控除', value: `▲${fmt(d.addDed.eqIT)}`, cls: 'minus' }] : []),
         { label: '基礎控除',   value: `▲${fmt(BASIC_DEDUCTION_IT)}`, cls: 'minus' },
         { label: '課税所得',   value: fmt(d.taxableForIT) },
         { label: '所得税',     value: fmt(d.incomeTax) },
@@ -1716,6 +2019,13 @@ function renderTaxList(d) {
       rows: [
         { label: '事業所得',   value: fmt(d.businessIncome) },
         { label: '社会保険料控除（国民健康保険 + 年金）', value: `▲${fmt(d.socialDeduction)}`, cls: 'minus' },
+        ...(d.addDed.kyosai   > 0 ? [{ label: '小規模企業共済等掛金控除', value: `▲${fmt(d.addDed.kyosai)}`, cls: 'minus' }] : []),
+        ...(d.addDed.ideco    > 0 ? [{ label: 'iDeCo掛金控除', value: `▲${fmt(d.addDed.ideco)}`, cls: 'minus' }] : []),
+        ...(d.addDed.spouseRT > 0 ? [{ label: '配偶者控除（住民税）', value: `▲${fmt(d.addDed.spouseRT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.depsRT   > 0 ? [{ label: `扶養控除（住民税）（一般${d.addDed.deps}人・特定${d.addDed.depsSp}人）`, value: `▲${fmt(d.addDed.depsRT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.medicalRT> 0 ? [{ label: '医療費控除（住民税）', value: `▲${fmt(d.addDed.medicalRT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.lifeRT   > 0 ? [{ label: '生命保険料控除（住民税）', value: `▲${fmt(d.addDed.lifeRT)}`, cls: 'minus' }] : []),
+        ...(d.addDed.eqRT     > 0 ? [{ label: '地震保険料控除（住民税）', value: `▲${fmt(d.addDed.eqRT)}`, cls: 'minus' }] : []),
         { label: '基礎控除（住民税）', value: `▲${fmt(BASIC_DEDUCTION_RT)}`, cls: 'minus' },
         { label: '課税所得（住民税）', value: fmt(d.taxableForRT) },
         { label: '所得割（10%：都道府県4% + 市区町村6%）', value: fmt(d.residentIncomeLevy) },
