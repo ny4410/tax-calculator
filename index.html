@@ -337,6 +337,67 @@ input[type="number"]:focus, select:focus {
 .setsuze-link-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 .setsuze-link-sub { font-size: 0.78rem; font-weight: 400; opacity: 0.85; }
 
+/* ── インライン節税シミュレーション ── */
+.isim-toggle { cursor: pointer; user-select: none; }
+.isim-toggle:hover .card-title { opacity: 0.85; }
+.isim-chevron { margin-left: auto; font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; display: inline-block; }
+.isim-chevron.open { transform: rotate(180deg); }
+.isim-baseline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+@media (max-width: 520px) { .isim-baseline { grid-template-columns: 1fr 1fr; } }
+.isim-b-item { background: var(--gray-light); border-radius: 8px; padding: 0.75rem; border: 1.5px solid var(--border); }
+.isim-b-item.hi-red { background: var(--red-light); border-color: #fca5a5; }
+.isim-b-item.hi-green { background: var(--green-light); border-color: #86efac; }
+.isim-b-label { font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 0.15rem; }
+.isim-b-value { font-size: 0.9375rem; font-weight: 700; }
+.isim-b-item.hi-red .isim-b-value { color: var(--red); }
+.isim-b-item.hi-green .isim-b-value { color: var(--green); }
+.isim-card { border: 2px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.875rem; transition: border-color 0.2s, background 0.2s; }
+.isim-card.has-val { border-color: #6ee7b7; background: #f0fdf4; }
+.isim-h { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.75rem; }
+.isim-icon { font-size: 1.25rem; flex-shrink: 0; line-height: 1; }
+.isim-title { font-size: 0.875rem; font-weight: 700; }
+.isim-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
+.isim-badge { font-size: 0.65rem; background: #dcfce7; color: #15803d; border-radius: 100px; padding: 0.1rem 0.4rem; font-weight: 600; display: inline-block; margin-top: 0.2rem; }
+.isim-range { width: 100%; height: 6px; appearance: none; -webkit-appearance: none; background: var(--border); border-radius: 3px; cursor: pointer; outline: none; display: block; }
+.isim-range::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #059669; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.isim-range::-moz-range-thumb { width: 16px; height: 16px; background: #059669; border-radius: 50%; border: none; }
+.isim-ctrl { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; }
+.isim-num { width: 5.5rem; text-align: right; padding: 0.3rem 0.4rem; border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.875rem; font-weight: 600; color: var(--text); -moz-appearance: textfield; }
+.isim-num::-webkit-outer-spin-button, .isim-num::-webkit-inner-spin-button { -webkit-appearance: none; }
+.isim-num:focus { outline: none; border-color: #059669; }
+.isim-unit { font-size: 0.75rem; color: var(--text-muted); }
+.isim-monthly { font-size: 0.75rem; color: var(--text-muted); margin-left: auto; }
+.isim-result { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem; }
+.isim-ri { background: white; border-radius: 7px; padding: 0.6rem 0.75rem; border: 1px solid var(--border); }
+.isim-ri-lbl { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 0.1rem; }
+.isim-ri-val { font-size: 0.9375rem; font-weight: 700; }
+.isim-ri-val.green { color: #059669; }
+.isim-furusato { background: var(--yellow-light); border: 1.5px solid #fde68a; border-radius: 8px; padding: 0.875rem 1rem; margin-bottom: 0.875rem; }
+.isim-furusato-top { display: flex; justify-content: space-between; align-items: center; }
+.isim-furusato-lbl { font-size: 0.8rem; font-weight: 600; color: var(--yellow); }
+.isim-furusato-amt { font-size: 1.375rem; font-weight: 700; color: #92400e; }
+.isim-furusato-note { font-size: 0.72rem; color: var(--yellow); margin-top: 0.25rem; }
+.isim-furusato-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-top: 0.5rem; }
+@media (max-width: 480px) { .isim-furusato-grid { grid-template-columns: 1fr 1fr; } }
+.isim-fg-item { background: white; border-radius: 6px; padding: 0.5rem; border: 1px solid var(--border); text-align: center; }
+.isim-fg-lbl { font-size: 0.67rem; color: var(--text-muted); display: block; margin-bottom: 0.15rem; }
+.isim-fg-val { font-size: 0.875rem; font-weight: 700; }
+.isim-fg-val.green { color: var(--green); }
+.isim-fg-val.orange { color: var(--orange); }
+.isim-furusato-foot { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.55; }
+.isim-sum { background: linear-gradient(135deg, #059669 0%, #047857 100%); border-radius: 10px; padding: 1.25rem; color: white; }
+.isim-sum-row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.8rem; }
+.isim-sum-div { border: none; border-top: 1px solid rgba(255,255,255,0.22); margin: 0.4rem 0; }
+.isim-sum-total { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; }
+.isim-sum-total-lbl { font-size: 0.9375rem; font-weight: 700; }
+.isim-sum-total-val { font-size: 1.625rem; font-weight: 700; color: #86efac; }
+.isim-sum-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.875rem; }
+.isim-sum-fi { background: rgba(0,0,0,0.15); border-radius: 7px; padding: 0.625rem; }
+.isim-sum-fi-lbl { font-size: 0.68rem; opacity: 0.75; display: block; margin-bottom: 0.1rem; }
+.isim-sum-fi-val { font-size: 0.9375rem; font-weight: 700; display: block; }
+.isim-sum-zero { text-align: center; padding: 1rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); }
+.isim-slider-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+
 /* Summary hero card */
 .summary-hero {
   background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
@@ -1365,11 +1426,134 @@ textarea:focus {
       </div>
     </div>
 
-    <!-- 節税シミュレーションへのリンク -->
-    <a href="/setsuze.html" class="setsuze-link-btn" id="setsuze-link">
-      💡 節税シミュレーションを見る →
-      <span class="setsuze-link-sub">小規模企業共済・iDeCo・ふるさと納税の節税効果を試算</span>
-    </a>
+    <!-- 節税シミュレーション（インライン） -->
+    <div class="card isim-toggle" onclick="toggleInlineSim(event)">
+      <div class="card-title" style="margin-bottom:0;padding-bottom:0;border-bottom:none;">
+        <div class="card-title-icon" style="background:#d1fae5;color:#059669;">💡</div>
+        節税シミュレーション
+        <span class="isim-chevron" id="isim-chevron">▼</span>
+      </div>
+      <div id="isim-body" style="display:none; margin-top:1.25rem; padding-top:1.25rem; border-top: 2px solid var(--border);">
+
+        <!-- ベースライン -->
+        <div class="isim-baseline">
+          <div class="isim-b-item">
+            <span class="isim-b-label">事業所得</span>
+            <span class="isim-b-value" id="isim-income">—</span>
+          </div>
+          <div class="isim-b-item hi-red">
+            <span class="isim-b-label">税金・社保 合計（節税なし）</span>
+            <span class="isim-b-value" id="isim-grand">—</span>
+          </div>
+          <div class="isim-b-item hi-green">
+            <span class="isim-b-label">可処分所得（節税なし）</span>
+            <span class="isim-b-value" id="isim-take">—</span>
+          </div>
+        </div>
+
+        <!-- 小規模企業共済 -->
+        <div class="isim-card" id="isim-kyosai-card">
+          <div class="isim-h">
+            <span class="isim-icon">🏦</span>
+            <div>
+              <div class="isim-title">小規模企業共済</div>
+              <div class="isim-desc">廃業・引退時の退職金代わりになる積立制度。掛金は全額所得控除。月額最大70,000円（年84万円）。</div>
+              <span class="isim-badge">💡 掛金全額 所得控除</span>
+            </div>
+          </div>
+          <div class="isim-slider-labels">
+            <span>0万円</span><span>21万円</span><span>42万円</span><span>63万円</span><span>84万円</span>
+          </div>
+          <input class="isim-range" type="range" id="isim-kyosai-slider" min="0" max="84" step="1" value="0"
+            oninput="onISimSlider('kyosai')" onchange="onISimSlider('kyosai')">
+          <div class="isim-ctrl">
+            <input class="isim-num" type="number" id="isim-kyosai-num" min="0" max="84" step="1" value="0"
+              oninput="onISimNum('kyosai')">
+            <span class="isim-unit">万円/年</span>
+            <span class="isim-monthly" id="isim-kyosai-monthly">（月額 0円）</span>
+          </div>
+          <div class="isim-result" id="isim-kyosai-result" style="display:none;">
+            <div class="isim-ri">
+              <span class="isim-ri-lbl">年間節税額</span>
+              <span class="isim-ri-val green" id="isim-kyosai-save">—</span>
+            </div>
+            <div class="isim-ri">
+              <span class="isim-ri-lbl">実質コスト（掛金 − 節税額）</span>
+              <span class="isim-ri-val" id="isim-kyosai-net">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- iDeCo -->
+        <div class="isim-card" id="isim-ideco-card">
+          <div class="isim-h">
+            <span class="isim-icon">📈</span>
+            <div>
+              <div class="isim-title">iDeCo（個人型確定拠出年金）</div>
+              <div class="isim-desc">自分で運用する私的年金制度。掛金は全額所得控除。自営業者は月額最大68,000円（年81.6万円）。60歳以降に受取可能。</div>
+              <span class="isim-badge">💡 掛金全額 所得控除</span>
+            </div>
+          </div>
+          <div class="isim-slider-labels">
+            <span>0万円</span><span>20万円</span><span>41万円</span><span>61万円</span><span>81万円</span>
+          </div>
+          <input class="isim-range" type="range" id="isim-ideco-slider" min="0" max="81" step="1" value="0"
+            oninput="onISimSlider('ideco')" onchange="onISimSlider('ideco')">
+          <div class="isim-ctrl">
+            <input class="isim-num" type="number" id="isim-ideco-num" min="0" max="82" step="1" value="0"
+              oninput="onISimNum('ideco')">
+            <span class="isim-unit">万円/年</span>
+            <span class="isim-monthly" id="isim-ideco-monthly">（月額 0円）</span>
+          </div>
+          <div class="isim-result" id="isim-ideco-result" style="display:none;">
+            <div class="isim-ri">
+              <span class="isim-ri-lbl">年間節税額</span>
+              <span class="isim-ri-val green" id="isim-ideco-save">—</span>
+            </div>
+            <div class="isim-ri">
+              <span class="isim-ri-lbl">実質コスト（掛金 − 節税額）</span>
+              <span class="isim-ri-val" id="isim-ideco-net">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ふるさと納税 -->
+        <div class="isim-furusato">
+          <div class="isim-furusato-top">
+            <span class="isim-furusato-lbl">🎁 ふるさと納税の上限目安</span>
+            <span class="isim-furusato-amt" id="isim-furusato-limit">—</span>
+          </div>
+          <div class="isim-furusato-note">※ 上限まで寄付した場合、実質自己負担は 2,000円</div>
+          <div class="isim-furusato-grid">
+            <div class="isim-fg-item">
+              <span class="isim-fg-lbl">上限目安額</span>
+              <span class="isim-fg-val" id="isim-furusato-limit2">—</span>
+            </div>
+            <div class="isim-fg-item">
+              <span class="isim-fg-lbl">実質自己負担</span>
+              <span class="isim-fg-val orange">2,000円</span>
+            </div>
+            <div class="isim-fg-item">
+              <span class="isim-fg-lbl">返礼品の目安（30%）</span>
+              <span class="isim-fg-val green" id="isim-furusato-return">—</span>
+            </div>
+          </div>
+          <div class="isim-furusato-foot">
+            ※ 上限額は住民税所得割をもとにした概算です。正確な上限はふるさと納税サイトのシミュレーターでご確認ください。
+          </div>
+        </div>
+
+        <!-- 合計サマリー -->
+        <div class="isim-sum" id="isim-sum"></div>
+
+        <p style="font-size:0.72rem;color:var(--text-muted);margin-top:0.75rem;line-height:1.6;">
+          ※ 本シミュレーションは節税なし（小規模企業共済・iDeCo掛金0円）を基準にした概算です。<br>
+          ※ その他控除（上記フォーム入力済み）は反映済みです。国民健康保険料はこれらの節税手段では変わりません。<br>
+          <a href="/setsuze.html" style="color:var(--blue);">詳細は節税シミュレーションページ →</a>
+        </p>
+
+      </div><!-- /isim-body -->
+    </div><!-- /isim card -->
 
     <div class="notice info" id="consumption-notice" style="display:none;">
       <span class="notice-icon">ℹ️</span>
@@ -2113,6 +2297,17 @@ function calculate() {
     }));
   } catch(e) {}
 
+  // インライン節税シミュレーションを初期化
+  setupInlineSim({
+    revenue, expenses, filing, bizRate, age, prefecture,
+    spouse:   addDed.spouse,
+    deps:     addDed.deps,
+    depsSp:   addDed.depsSp,
+    medPaid:  addDed.medPaid,
+    lifePaid: addDed.lifePaid,
+    eqPaid:   addDed.eqPaid,
+  });
+
   const section = document.getElementById('result-section');
   section.classList.add('visible');
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2303,6 +2498,192 @@ document.querySelectorAll('.faq-q').forEach(q => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
   });
 });
+
+// ── インライン節税シミュレーション ─────────────────────────────────────────
+let _isimParams = null;
+let _isimBaseline = null;
+
+function getMarginalRateI(taxable) {
+  if (taxable <= 0) return 0;
+  for (const b of INCOME_TAX_TABLE) {
+    if (taxable <= b.limit) return b.rate;
+  }
+  return 0.45;
+}
+
+function calcTaxForISim({ revenue, expenses, filing, bizRate, age, prefecture,
+                          kyosai = 0, ideco = 0,
+                          spouse = false, deps = 0, depsSp = 0,
+                          medPaid = 0, lifePaid = 0, eqPaid = 0 }) {
+  const nhiData = NHI_PREFECTURES.find(p => p.pref === prefecture) || NHI_PREFECTURES[12];
+  const incomeBeforeDeduction = Math.max(0, revenue - expenses);
+  const businessIncome        = Math.max(0, incomeBeforeDeduction - filing);
+
+  let bizTax = 0;
+  if (bizRate > 0) {
+    const rawBase = Math.max(0, incomeBeforeDeduction - BUSINESS_TAX_DEDUCTION);
+    bizTax = Math.floor(Math.floor(rawBase / 1000) * 1000 * (bizRate / 100) / 100) * 100;
+  }
+  const pension = age === 'over65' ? 0 : PENSION_ANNUAL;
+  const nhiFlatMult = businessIncome <= 430_000 ? 0.3 : businessIncome <= 720_000 ? 0.5 : businessIncome <= 965_000 ? 0.8 : 1.0;
+  const nhiBase    = Math.max(0, businessIncome - BASIC_DEDUCTION_RT);
+  const mFlatRed   = Math.floor(nhiData.m[1] * nhiFlatMult);
+  const sFlatRed   = Math.floor(nhiData.s[1] * nhiFlatMult);
+  const nFlatRed   = Math.floor(nhiData.n[1] * nhiFlatMult);
+  const nhiMedical = clamp(Math.floor(nhiBase * nhiData.m[0]) + mFlatRed, mFlatRed, NHI_CAP.m);
+  const nhiSupport = clamp(Math.floor(nhiBase * nhiData.s[0]) + sFlatRed, sFlatRed, NHI_CAP.s);
+  const nhiNursing = age === '40to64' ? clamp(Math.floor(nhiBase * nhiData.n[0]) + nFlatRed, nFlatRed, NHI_CAP.n) : 0;
+  const nhiTotal   = nhiMedical + nhiSupport + nhiNursing;
+  const socialDed  = nhiTotal + pension;
+
+  const spouseIT = spouse ? 380_000 : 0; const spouseRT = spouse ? 330_000 : 0;
+  const depsIT   = deps * 380_000 + depsSp * 630_000;
+  const depsRT   = deps * 330_000 + depsSp * 450_000;
+  const medBase  = Math.max(businessIncome * 0.05, 100_000);
+  const medIT    = Math.min(Math.max(0, medPaid - medBase), 2_000_000);
+  const lifeIT   = lifePaid <= 0 ? 0 : lifePaid <= 20_000 ? lifePaid : lifePaid <= 40_000 ? Math.floor(lifePaid/2)+10_000 : lifePaid <= 80_000 ? Math.floor(lifePaid/4)+20_000 : 40_000;
+  const lifeRT   = lifePaid <= 0 ? 0 : lifePaid <= 12_000 ? lifePaid : lifePaid <= 32_000 ? Math.floor(lifePaid/2)+6_000 : lifePaid <= 56_000 ? Math.floor(lifePaid/4)+14_000 : 28_000;
+  const eqIT     = Math.min(eqPaid, 50_000);
+  const eqRT     = Math.min(Math.floor(eqPaid / 2), 25_000);
+  const addIT    = kyosai + ideco + spouseIT + depsIT + medIT + lifeIT + eqIT;
+  const addRT    = kyosai + ideco + spouseRT + depsRT + medIT + lifeRT + eqRT;
+
+  const taxableIT = Math.max(0, businessIncome - socialDed - BASIC_DEDUCTION_IT - addIT);
+  const it0       = calcIncomeTax(taxableIT);
+  const itTotal   = it0 + Math.floor(it0 * 0.021);
+  const taxableRT = Math.max(0, businessIncome - socialDed - BASIC_DEDUCTION_RT - addRT);
+  const rtLevy    = Math.floor(taxableRT * 0.10);
+  const rtFlat    = businessIncome > 450_000 ? 6_000 : 0;
+  const rtTotal   = rtLevy + rtFlat;
+  const grand     = itTotal + rtTotal + bizTax + nhiTotal + pension;
+
+  return { incomeBeforeDeduction, itTotal, rtTotal, rtLevy, taxableIT, bizTax, nhiTotal, pension, grand, disposable: Math.max(0, revenue - expenses - grand) };
+}
+
+function setupInlineSim(params) {
+  _isimParams   = params;
+  _isimBaseline = calcTaxForISim({ ...params, kyosai: 0, ideco: 0 });
+
+  document.getElementById('isim-income').textContent = fmt(_isimBaseline.incomeBeforeDeduction);
+  document.getElementById('isim-grand').textContent  = fmt(_isimBaseline.grand);
+  document.getElementById('isim-take').textContent   = fmt(_isimBaseline.disposable);
+
+  const limit  = calcFurusatoLimitI(_isimBaseline.rtLevy, _isimBaseline.taxableIT);
+  const retval = Math.floor(limit * 0.30);
+  document.getElementById('isim-furusato-limit').textContent  = fmt(limit);
+  document.getElementById('isim-furusato-limit2').textContent = fmt(limit);
+  document.getElementById('isim-furusato-return').textContent = fmt(retval);
+
+  document.getElementById('isim-kyosai-slider').value = 0;
+  document.getElementById('isim-kyosai-num').value    = 0;
+  document.getElementById('isim-ideco-slider').value  = 0;
+  document.getElementById('isim-ideco-num').value     = 0;
+  updateISimMonthly('kyosai', 0);
+  updateISimMonthly('ideco', 0);
+  updateISimSavings();
+}
+
+function calcFurusatoLimitI(rtLevy, taxableIT) {
+  if (rtLevy <= 0) return 0;
+  const rate  = getMarginalRateI(taxableIT);
+  const denom = 1 - rate * 1.021 - 0.10;
+  if (denom <= 0) return 0;
+  return Math.max(0, Math.floor((rtLevy * 0.20) / denom) + 2000);
+}
+
+function toggleInlineSim(e) {
+  if (e && e.target.closest('input,a')) return;
+  const body    = document.getElementById('isim-body');
+  const chevron = document.getElementById('isim-chevron');
+  const isOpen  = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function updateISimMonthly(key, manVal) {
+  document.getElementById(`isim-${key}-monthly`).textContent =
+    '（月額 ' + Math.round(manVal * 10_000 / 12).toLocaleString('ja-JP') + '円）';
+}
+
+function onISimSlider(key) {
+  const v = parseInt(document.getElementById(`isim-${key}-slider`).value);
+  document.getElementById(`isim-${key}-num`).value = v;
+  updateISimMonthly(key, v);
+  updateISimSavings();
+}
+
+function onISimNum(key) {
+  const max = key === 'kyosai' ? 84 : 82;
+  const v   = clamp(parseFloat(document.getElementById(`isim-${key}-num`).value) || 0, 0, max);
+  document.getElementById(`isim-${key}-num`).value   = v;
+  document.getElementById(`isim-${key}-slider`).value = Math.min(v, parseInt(document.getElementById(`isim-${key}-slider`).max));
+  updateISimMonthly(key, v);
+  updateISimSavings();
+}
+
+function updateISimSavings() {
+  if (!_isimParams || !_isimBaseline) return;
+  const kyosaiY = clamp((parseFloat(document.getElementById('isim-kyosai-num').value) || 0) * 10_000, 0, 840_000);
+  const idecoY  = clamp((parseFloat(document.getElementById('isim-ideco-num').value)  || 0) * 10_000, 0, 816_000);
+
+  const withK   = calcTaxForISim({ ..._isimParams, kyosai: kyosaiY, ideco: 0 });
+  const withI   = calcTaxForISim({ ..._isimParams, kyosai: 0,       ideco: idecoY });
+  const withAll = calcTaxForISim({ ..._isimParams, kyosai: kyosaiY, ideco: idecoY });
+
+  const kSave = _isimBaseline.grand - withK.grand;
+  const iSave = _isimBaseline.grand - withI.grand;
+
+  const kyosaiCard = document.getElementById('isim-kyosai-card');
+  const kyosaiRes  = document.getElementById('isim-kyosai-result');
+  if (kyosaiY > 0) {
+    kyosaiCard.classList.add('has-val');
+    kyosaiRes.style.display = 'grid';
+    document.getElementById('isim-kyosai-save').textContent = '+' + fmt(kSave);
+    document.getElementById('isim-kyosai-net').textContent  = fmt(Math.max(0, kyosaiY - kSave));
+  } else {
+    kyosaiCard.classList.remove('has-val');
+    kyosaiRes.style.display = 'none';
+  }
+
+  const idecoCard = document.getElementById('isim-ideco-card');
+  const idecoRes  = document.getElementById('isim-ideco-result');
+  if (idecoY > 0) {
+    idecoCard.classList.add('has-val');
+    idecoRes.style.display = 'grid';
+    document.getElementById('isim-ideco-save').textContent = '+' + fmt(iSave);
+    document.getElementById('isim-ideco-net').textContent  = fmt(Math.max(0, idecoY - iSave));
+  } else {
+    idecoCard.classList.remove('has-val');
+    idecoRes.style.display = 'none';
+  }
+
+  const combinedSave = _isimBaseline.grand - withAll.grand;
+  const sumEl = document.getElementById('isim-sum');
+  if (kyosaiY === 0 && idecoY === 0) {
+    sumEl.innerHTML = `<div class="isim-sum-zero">小規模企業共済またはiDeCoの金額を設定すると合計節税額が表示されます</div>`;
+    return;
+  }
+  let rows = '';
+  if (kyosaiY > 0) rows += `<div class="isim-sum-row"><span>🏦 小規模企業共済（年${(kyosaiY/10000).toFixed(0)}万円）</span><span>+${fmt(kSave)}</span></div>`;
+  if (idecoY  > 0) rows += `<div class="isim-sum-row"><span>📈 iDeCo（年${(idecoY/10000).toFixed(0)}万円）</span><span>+${fmt(iSave)}</span></div>`;
+  sumEl.innerHTML = `
+    ${rows}
+    <hr class="isim-sum-div">
+    <div class="isim-sum-total">
+      <span class="isim-sum-total-lbl">合計 節税額</span>
+      <span class="isim-sum-total-val">+${fmt(combinedSave)}</span>
+    </div>
+    <div class="isim-sum-footer">
+      <div class="isim-sum-fi">
+        <span class="isim-sum-fi-lbl">節税後の税金・社保 合計</span>
+        <span class="isim-sum-fi-val">${fmt(withAll.grand)}</span>
+      </div>
+      <div class="isim-sum-fi">
+        <span class="isim-sum-fi-lbl">節税後の可処分所得</span>
+        <span class="isim-sum-fi-val">${fmt(withAll.disposable)}</span>
+      </div>
+    </div>`;
+}
 </script>
 </body>
 </html>
