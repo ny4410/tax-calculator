@@ -342,6 +342,50 @@ input[type="number"]:focus, select:focus {
 .summary-item-label { font-size: 0.78rem; opacity: 0.85; }
 .summary-item-value { font-size: 1.1rem; font-weight: 700; margin-top: 0.2rem; }
 
+/* フロー型サマリー */
+.fl-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 0.5rem;
+}
+.fl-top-label { font-size: 0.85rem; opacity: 0.82; }
+.fl-top-val   { font-size: 1.5rem; font-weight: 700; }
+.fl-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.22rem 0.75rem; margin-bottom: 0.18rem;
+  background: rgba(0,0,0,0.13); border-radius: 4px;
+}
+.fl-item-label { font-size: 0.78rem; opacity: 0.85; }
+.fl-item-val   { font-size: 0.82rem; font-weight: 600; color: #fca5a5; }
+.fl-section-head {
+  font-size: 0.75rem; opacity: 0.68;
+  padding: 0.45rem 0 0.2rem; letter-spacing: 0.02em;
+}
+.fl-section-head small { font-size: 0.67rem; }
+.fl-divider {
+  border: none; border-top: 1px solid rgba(255,255,255,0.22); margin: 0.4rem 0;
+}
+.fl-subtotal {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.3rem 0.2rem;
+}
+.fl-subtotal-label { font-size: 0.75rem; opacity: 0.7; line-height: 1.4; }
+.fl-subtotal-label small { font-size: 0.67rem; opacity: 0.8; }
+.fl-subtotal-val   { font-size: 1.1rem; font-weight: 700; }
+.fl-takehome {
+  background: rgba(255,255,255,0.14); border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 10px; padding: 0.875rem 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 0.25rem;
+}
+.fl-takehome-label { font-size: 0.875rem; font-weight: 600; }
+.fl-takehome-val   { font-size: 2rem; font-weight: 700; color: #86efac; }
+.fl-footer { display: flex; gap: 0.625rem; margin-top: 0.75rem; }
+.fl-footer-item {
+  flex: 1; background: rgba(0,0,0,0.18); border-radius: 8px; padding: 0.625rem 0.75rem;
+}
+.fl-footer-label { font-size: 0.75rem; opacity: 0.75; display: block; }
+.fl-footer-val   { font-size: 0.9rem; font-weight: 700; display: block; margin-top: 0.1rem; }
+
 /* Income breakdown bar */
 .breakdown-bar-wrap { margin: 1.25rem 0; }
 .breakdown-bar {
@@ -1208,35 +1252,59 @@ textarea:focus {
   <section aria-label="計算結果" aria-live="polite">
   <div id="result-section">
 
-    <!-- サマリーカード -->
+    <!-- サマリーカード（フロー型） -->
     <div class="summary-hero">
-      <h2>年間 納付税金・社会保険料 合計</h2>
-      <div class="summary-total" id="sum-total">—</div>
-      <div class="summary-note">所得税 ＋ 復興特別所得税 ＋ 住民税 ＋ 個人事業税 ＋ 国民健康保険 ＋ 国民年金</div>
-      <div class="summary-grid">
-        <div class="summary-item">
-          <div class="summary-item-label">年間売上（税抜）</div>
-          <div class="summary-item-value" id="sum-revenue">—</div>
+      <!-- ① 年間売上 -->
+      <div class="fl-top">
+        <span class="fl-top-label">年間売上（収入）</span>
+        <span class="fl-top-val" id="sum-revenue">—</span>
+      </div>
+
+      <!-- ▲ 経費 -->
+      <div id="fl-expenses"></div>
+
+      <!-- ────── 事業所得 -->
+      <div class="fl-divider"></div>
+      <div class="fl-subtotal">
+        <span class="fl-subtotal-label">＝ 事業所得
+          <small>（確定申告で申告する所得）</small>
+        </span>
+        <span class="fl-subtotal-val" id="sum-income">—</span>
+      </div>
+
+      <!-- ▲ 所得控除 -->
+      <div class="fl-section-head">▲ 所得控除<small>（税が課されない所得として認められる控除額）</small></div>
+      <div id="fl-deductions"></div>
+
+      <!-- ────── 課税所得 -->
+      <div class="fl-divider"></div>
+      <div class="fl-subtotal">
+        <span class="fl-subtotal-label">＝ 課税所得
+          <small>（実際に税率が適用される所得額）</small>
+        </span>
+        <span class="fl-subtotal-val" id="sum-taxable">—</span>
+      </div>
+
+      <!-- ▲ 税金・社保 -->
+      <div class="fl-section-head">▲ 税金・社保（実際の支出）</div>
+      <div id="fl-taxes"></div>
+
+      <!-- ────── 可処分所得 -->
+      <div class="fl-divider"></div>
+      <div class="fl-takehome">
+        <span class="fl-takehome-label">可処分所得（概算）</span>
+        <span class="fl-takehome-val" id="sum-takehome">—</span>
+      </div>
+
+      <!-- フッター: 税負担率・可処分所得率 -->
+      <div class="fl-footer">
+        <div class="fl-footer-item">
+          <span class="fl-footer-label">税負担率（所得比）</span>
+          <span class="fl-footer-val" id="sum-rate">—</span>
         </div>
-        <div class="summary-item">
-          <div class="summary-item-label">年間経費</div>
-          <div class="summary-item-value" id="sum-expenses">—</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-item-label">事業所得</div>
-          <div class="summary-item-value" id="sum-income">—</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-item-label">税負担率</div>
-          <div class="summary-item-value" id="sum-rate">—</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-item-label">社会保険料合計</div>
-          <div class="summary-item-value" id="sum-social">—</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-item-label">実質手取り（概算）</div>
-          <div class="summary-item-value" id="sum-takehome">—</div>
+        <div class="fl-footer-item">
+          <span class="fl-footer-label">可処分所得率（売上比）</span>
+          <span class="fl-footer-val" id="sum-takehome-rate">—</span>
         </div>
       </div>
     </div>
@@ -1888,12 +1956,48 @@ function calculate() {
   const purchaseTax = Math.floor(expenses * 0.10);  // 仕入消費税（税抜経費 × 10%）
 
   // ── 描画 ──
-  document.getElementById('sum-total').textContent    = fmt(grandTotal);
-  document.getElementById('sum-revenue').textContent  = fmt(revenue);
-  document.getElementById('sum-expenses').textContent = fmt(expenses);
-  document.getElementById('sum-income').textContent   = fmt(businessIncome);
-  document.getElementById('sum-rate').textContent     = totalRate + '%';
-  document.getElementById('sum-social').textContent   = fmt(nhiTotal + pension);
+  const effectiveFiling = Math.min(filing, incomeBeforeDeduction);
+  document.getElementById('sum-revenue').textContent = fmt(revenue);
+  document.getElementById('sum-income').textContent  = fmt(incomeBeforeDeduction);
+  document.getElementById('sum-taxable').textContent = fmt(taxableForIT);
+  document.getElementById('sum-rate').textContent    = totalRate + '%';
+
+  // ヘルパー: 控除・税金の行を生成
+  const mkItem = (lbl, val) =>
+    `<div class="fl-item"><span class="fl-item-label">${lbl}</span><span class="fl-item-val">▲${fmt(val)}</span></div>`;
+
+  // ▲ 経費（売上 → 事業所得）
+  document.getElementById('fl-expenses').innerHTML = mkItem('経費', expenses);
+
+  // ▲ 所得控除（事業所得 → 課税所得）
+  const filingLbl = filing === 650_000 ? '青色申告特別控除（65万円）'
+    : filing === 550_000 ? '青色申告特別控除（55万円）'
+    : filing === 100_000 ? '青色申告特別控除（10万円）' : '';
+  const deductionItems = [
+    ...(effectiveFiling > 0 && filingLbl ? [[filingLbl, effectiveFiling]] : []),
+    ...(socialDeduction > 0 ? [['社会保険料控除（国保＋年金）', socialDeduction]] : []),
+    ...(addDed.kyosai   > 0 ? [['小規模企業共済等掛金控除', addDed.kyosai]] : []),
+    ...(addDed.ideco    > 0 ? [['iDeCo（小規模企業共済等掛金控除）', addDed.ideco]] : []),
+    ...(addDed.spouseIT > 0 ? [['配偶者控除', addDed.spouseIT]] : []),
+    ...(addDed.depsIT   > 0 ? [['扶養控除', addDed.depsIT]] : []),
+    ...(addDed.medicalIT> 0 ? [['医療費控除', addDed.medicalIT]] : []),
+    ...(addDed.lifeIT   > 0 ? [['生命保険料控除', addDed.lifeIT]] : []),
+    ...(addDed.eqIT     > 0 ? [['地震保険料控除', addDed.eqIT]] : []),
+    ['基礎控除', BASIC_DEDUCTION_IT],
+  ];
+  document.getElementById('fl-deductions').innerHTML =
+    deductionItems.map(([lbl, val]) => mkItem(lbl, val)).join('');
+
+  // ▲ 税金・社保（課税所得 → 可処分所得）
+  const taxItems = [
+    ['所得税・復興特別所得税', incomeTaxTotal],
+    ['住民税',                 residentTotal],
+    ...(bizTax > 0 ? [['個人事業税', bizTax]] : []),
+    ['国民健康保険',           nhiTotal],
+    ...(pension > 0 ? [['国民年金', pension]] : []),
+  ].filter(([, v]) => v > 0);
+  document.getElementById('fl-taxes').innerHTML =
+    taxItems.map(([lbl, val]) => mkItem(lbl, val)).join('');
 
   const consumptionCard   = document.getElementById('consumption-card');
   const consumptionDetail = document.getElementById('consumption-detail');
@@ -1905,8 +2009,11 @@ function calculate() {
     consumptionTax = Math.max(0, salesTax - purchaseTax);
   }
 
-  // 手取り（消費税納付分を差し引いた実質手取り）
-  document.getElementById('sum-takehome').textContent = fmt(Math.max(0, takeHome - consumptionTax));
+  // 可処分所得 = 事業所得（売上−経費）− 税金・社会保険料（消費税は含まない）
+  const disposableIncome = Math.max(0, takeHome);
+  document.getElementById('sum-takehome').textContent      = fmt(disposableIncome);
+  document.getElementById('sum-takehome-rate').textContent =
+    (revenue > 0 ? ((disposableIncome / revenue) * 100).toFixed(1) : '0.0') + '%';
 
   if (consumptionType === 'exempt') {
     consumptionCard.style.display = 'none';
