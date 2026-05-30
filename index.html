@@ -459,6 +459,22 @@ input[type="number"]:focus, select:focus {
 .dr.subtotal .v { font-weight: 700; }
 .dr .minus { color: var(--red); }
 
+/* 消費税カード行 */
+.tax-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.35rem 0; font-size: 0.85rem;
+  border-bottom: 1px dashed #f1f5f9; color: var(--text-muted);
+}
+.tax-row:last-child { border-bottom: none; }
+.tax-row.subtotal {
+  border-top: 1px solid var(--border); border-bottom: none;
+  margin-top: 0.25rem; padding-top: 0.5rem;
+  font-weight: 600; color: var(--text); font-size: 0.875rem;
+}
+.tax-row-label { flex: 1; }
+.tax-row-value { font-weight: 500; color: var(--text); white-space: nowrap; }
+.tax-row-value.minus { color: var(--red); }
+
 /* Alert / notice */
 .notice {
   display: flex; gap: 0.625rem; padding: 0.875rem 1rem;
@@ -1352,7 +1368,7 @@ textarea:focus {
       <div class="notice warn mt-1">
         <span class="notice-icon">⚠️</span>
         <span id="notice-text">
-          この計算は<strong>概算</strong>です。医療費控除・小規模企業共済等掛金控除・配偶者控除など各種控除は考慮していません。国民健康保険料は選択した都道府県の<strong>代表市区町村の令和7年度料率</strong>を参考値として使用しており、実際の料率は居住する区市町村により異なります。実際の税額は税務署・税理士にご確認ください。
+          この計算は<strong>概算</strong>です。国民健康保険料は選択した都道府県の<strong>代表市区町村の令和7年度料率</strong>を参考値として使用しており、実際の料率は居住する区市町村により異なります。実際の税額は税務署・税理士にご確認ください。
         </span>
       </div>
     </div>
@@ -2077,7 +2093,7 @@ function renderBreakdownBar(revenue, expenses, filing, grandTotal, takeHome) {
   const base = Math.max(revenue, expenses + grandTotal);
   const pct = (v) => Math.max(0, v / base * 100).toFixed(2) + '%';
   const segments = [
-    { label: '手取り',       value: Math.max(0, takeHome), color: '#16a34a' },
+    { label: '可処分所得',   value: Math.max(0, takeHome), color: '#16a34a' },
     { label: '税金・社保',   value: grandTotal,              color: '#2563eb' },
     { label: '経費',         value: expenses,                color: '#94a3b8' },
   ].filter(s => s.value > 0);
