@@ -329,6 +329,29 @@ input[type="range"]::-moz-range-thumb {
   color: rgba(255,255,255,0.7);
 }
 
+/* ── 入力単位切替 ── */
+.input-mode-wrap {
+  display: flex; gap: 3px;
+  background: var(--gray-light); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+.input-mode-label {
+  flex: 1; text-align: center;
+  padding: 0.45rem 0.5rem; border-radius: 6px;
+  cursor: pointer; font-size: 0.875rem; font-weight: 500;
+  color: var(--text-muted); transition: all 0.15s; user-select: none;
+}
+.input-mode-label:has(input:checked) {
+  background: white; color: var(--green2); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.input-mode-label input { display: none; }
+.amount-preview {
+  display: block; margin-top: 0.3rem;
+  font-size: 0.78rem; color: var(--text-muted);
+}
+.amount-preview:empty { display: none; }
+
 /* ── Error ── */
 #error-msg {
   color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; display: none;
@@ -373,20 +396,36 @@ footer a { color: #64748b; text-decoration: underline; font-size: 0.8rem; }
 
     <div class="form-grid">
 
+      <div class="form-group full">
+        <label>入力単位</label>
+        <div class="input-mode-wrap">
+          <label class="input-mode-label">
+            <input type="radio" name="input-unit" value="man" checked onchange="setInputUnit('man')">
+            <span>万円単位</span>
+          </label>
+          <label class="input-mode-label">
+            <input type="radio" name="input-unit" value="yen" onchange="setInputUnit('yen')">
+            <span>円単位（詳細入力）</span>
+          </label>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>年間売上（税抜）<span class="required"> *</span></label>
         <div class="input-wrap">
-          <input type="number" id="revenue" placeholder="例: 500" min="0" step="1" autocomplete="off">
+          <input type="number" id="revenue" placeholder="例: 500" min="0" step="1" autocomplete="off" oninput="updatePreview('revenue','revenue-preview')">
           <span class="input-unit">万円</span>
         </div>
+        <span class="amount-preview" id="revenue-preview"></span>
       </div>
 
       <div class="form-group">
         <label>年間経費<span class="required"> *</span></label>
         <div class="input-wrap">
-          <input type="number" id="expenses" placeholder="例: 150" min="0" step="1" autocomplete="off">
+          <input type="number" id="expenses" placeholder="例: 150" min="0" step="1" autocomplete="off" oninput="updatePreview('expenses','expenses-preview')">
           <span class="input-unit">万円</span>
         </div>
+        <span class="amount-preview" id="expenses-preview"></span>
       </div>
 
       <div class="form-group full">
@@ -880,6 +919,40 @@ const NHI_PREFECTURES = [
 const fmt   = n => Math.round(n).toLocaleString('ja-JP') + '円';
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
+function toJPYLabel(n) {
+  const oku = Math.floor(n / 100_000_000);
+  const afterOku = n % 100_000_000;
+  const man = Math.floor(afterOku / 10_000);
+  const rem = afterOku % 10_000;
+  if (oku === 0 && man === 0) return n.toLocaleString('ja-JP') + '円';
+  let s = '';
+  if (oku > 0) s += oku.toLocaleString('ja-JP') + '億';
+  if (man > 0) s += man.toLocaleString('ja-JP') + '万';
+  if (rem > 0) s += rem.toLocaleString('ja-JP');
+  return s + '円';
+}
+
+function updatePreview(inputId, previewId) {
+  const raw  = parseFloat(document.getElementById(inputId).value) || 0;
+  const unit = (document.querySelector('input[name="input-unit"]:checked') || {}).value || 'man';
+  const yen  = unit === 'man' ? raw * 10_000 : raw;
+  document.getElementById(previewId).textContent = yen > 0 ? toJPYLabel(yen) : '';
+}
+
+function setInputUnit(unit) {
+  const isMan = unit === 'man';
+  const multiplier = isMan ? 0.0001 : 10000;
+  const revEl = document.getElementById('revenue');
+  const expEl = document.getElementById('expenses');
+  if (revEl.value !== '') revEl.value = Math.round(parseFloat(revEl.value) * multiplier) || '';
+  if (expEl.value !== '') expEl.value = Math.round(parseFloat(expEl.value) * multiplier) || '';
+  revEl.placeholder = isMan ? '例: 500'     : '例: 5000000';
+  expEl.placeholder = isMan ? '例: 150'     : '例: 1500000';
+  document.querySelectorAll('.input-unit').forEach(el => el.textContent = isMan ? '万円' : '円');
+  updatePreview('revenue',  'revenue-preview');
+  updatePreview('expenses', 'expenses-preview');
+}
+
 function calcIncomeTax(taxable) {
   if (taxable <= 0) return 0;
   for (const b of INCOME_TAX_TABLE) {
@@ -1023,10 +1096,12 @@ function updateMonthly(key, mannen) {
 
 // ── 入力読み取り ──────────────────────────────────────────────────────────────
 function getBaseParams() {
-  const man = 10_000;
+  const unit = (document.querySelector('input[name="input-unit"]:checked') || {}).value || 'man';
+  const mult = unit === 'man' ? 10_000 : 1;
+  const man  = 10_000;
   return {
-    revenue:    (parseFloat(document.getElementById('revenue').value)   || 0) * man,
-    expenses:   (parseFloat(document.getElementById('expenses').value)  || 0) * man,
+    revenue:    (parseFloat(document.getElementById('revenue').value)   || 0) * mult,
+    expenses:   (parseFloat(document.getElementById('expenses').value)  || 0) * mult,
     filing:     parseFloat(document.querySelector('input[name="filing"]:checked').value),
     bizRate:    parseFloat(document.getElementById('business-type').value) || 0,
     age:        document.getElementById('age').value,
