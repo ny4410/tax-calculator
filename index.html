@@ -2703,8 +2703,20 @@ function updateISimSavings() {
     </div>`;
 }
 
-// ── JSON 保存・読み込み ──────────────────────────────────────────────────────
-function downloadJSON() {
+// ── JSON 保存・読み込み（HMAC-SHA256 チェックサム付き） ────────────────────────
+const _JSON_SIGN_KEY = 'freelance-calcs.com/tax-calculator/v1';
+
+async function _computeHMAC(obj) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw', enc.encode(_JSON_SIGN_KEY),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(JSON.stringify(obj)));
+  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function downloadJSON() {
   const inputMode = document.querySelector('input[name="input-mode"]:checked').value;
   const inputUnit = document.querySelector('input[name="input-unit"]:checked').value;
   const unitMult  = inputUnit === 'man' ? 10_000 : 1;
@@ -2719,7 +2731,8 @@ function downloadJSON() {
   }
 
   const bizRateRaw = parseFloat(document.getElementById('business-type').value);
-  const data = {
+  // checksum を付加する前の payload（この内容に署名する）
+  const payload = {
     version: '1.0',
     savedAt: new Date().toISOString(),
     inputs: {
@@ -2742,7 +2755,10 @@ function downloadJSON() {
     },
   };
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  // HMAC-SHA256 チェックサムを計算して末尾に付加
+  try { payload.checksum = await _computeHMAC(payload); } catch(_) {}
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
@@ -2753,78 +2769,104 @@ function downloadJSON() {
   URL.revokeObjectURL(url);
 }
 
-function importJSON(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    try {
-      const data = JSON.parse(ev.target.result);
-      if (!data.inputs) throw new Error('形式エラー');
-      const inp = data.inputs;
+function _restoreForm(inp) {
+  // 年間入力モード・万円単位に切替
+  setInputMode('annual');
+  document.querySelector('input[name="input-mode"][value="annual"]').checked = true;
+  setInputUnit('man');
+  document.querySelector('input[name="input-unit"][value="man"]').checked = true;
 
-      // 年間入力モード・万円単位に切替
-      setInputMode('annual');
-      document.querySelector('input[name="input-mode"][value="annual"]').checked = true;
-      setInputUnit('man');
-      document.querySelector('input[name="input-unit"][value="man"]').checked = true;
+  // 売上・経費（yen → 万円）
+  document.getElementById('revenue').value  = inp.revenue  ? Math.round(inp.revenue  / 10_000) : '';
+  document.getElementById('expenses').value = inp.expenses ? Math.round(inp.expenses / 10_000) : '';
+  updatePreview('revenue',  'revenue-preview');
+  updatePreview('expenses', 'expenses-preview');
 
-      // 売上・経費（yen → 万円）
-      document.getElementById('revenue').value  = inp.revenue  ? Math.round(inp.revenue  / 10_000) : '';
-      document.getElementById('expenses').value = inp.expenses ? Math.round(inp.expenses / 10_000) : '';
-      updatePreview('revenue',  'revenue-preview');
-      updatePreview('expenses', 'expenses-preview');
+  // 申告方法
+  const filingRadio = document.querySelector(`input[name="filing"][value="${inp.filing}"]`);
+  if (filingRadio) filingRadio.checked = true;
 
-      // 申告方法
-      const filingRadio = document.querySelector(`input[name="filing"][value="${inp.filing}"]`);
-      if (filingRadio) filingRadio.checked = true;
+  // 業種
+  if (inp.bizRate !== null && inp.bizRate !== undefined) {
+    const btEl = document.getElementById('business-type');
+    const opt  = Array.from(btEl.options).find(o => parseFloat(o.value) === inp.bizRate && o.value !== '');
+    if (opt) btEl.value = opt.value;
+    updateBizTypeTip();
+  }
 
-      // 業種（同一valueの最初のoptionを選択）
-      if (inp.bizRate !== null && inp.bizRate !== undefined) {
-        const btEl = document.getElementById('business-type');
-        const opt  = Array.from(btEl.options).find(o => parseFloat(o.value) === inp.bizRate && o.value !== '');
-        if (opt) btEl.value = opt.value;
-        updateBizTypeTip();
-      }
+  // 年齢・都道府県・消費税
+  if (inp.age)        document.getElementById('age').value        = inp.age;
+  if (inp.prefecture) document.getElementById('prefecture').value = inp.prefecture;
+  if (inp.consumptionType) {
+    const r = document.querySelector(`input[name="consumption"][value="${inp.consumptionType}"]`);
+    if (r) r.checked = true;
+  }
 
-      // 年齢・都道府県・消費税
-      if (inp.age)        document.getElementById('age').value        = inp.age;
-      if (inp.prefecture) document.getElementById('prefecture').value = inp.prefecture;
-      if (inp.consumptionType) {
-        const r = document.querySelector(`input[name="consumption"][value="${inp.consumptionType}"]`);
-        if (r) r.checked = true;
-      }
+  // 控除
+  document.getElementById('d-spouse').checked        = !!inp.spouse;
+  document.getElementById('d-dependents').value      = inp.deps    || 0;
+  document.getElementById('d-dependents-sp').value   = inp.depsSp  || 0;
+  document.getElementById('d-kyosai').value          = inp.kyosai  || 0;
+  document.getElementById('d-ideco').value           = inp.ideco   || 0;
+  document.getElementById('d-medical').value         = inp.medPaid || 0;
+  document.getElementById('d-life').value            = inp.lifePaid|| 0;
+  document.getElementById('d-earthquake').value      = inp.eqPaid  || 0;
 
-      // 控除
-      document.getElementById('d-spouse').checked        = !!inp.spouse;
-      document.getElementById('d-dependents').value      = inp.deps    || 0;
-      document.getElementById('d-dependents-sp').value   = inp.depsSp  || 0;
-      document.getElementById('d-kyosai').value          = inp.kyosai  || 0;
-      document.getElementById('d-ideco').value           = inp.ideco   || 0;
-      document.getElementById('d-medical').value         = inp.medPaid || 0;
-      document.getElementById('d-life').value            = inp.lifePaid|| 0;
-      document.getElementById('d-earthquake').value      = inp.eqPaid  || 0;
-
-      // 控除セクションを開く（入力値があれば）
-      const hasDed = inp.spouse || inp.deps || inp.depsSp || inp.kyosai ||
-                     inp.ideco  || inp.medPaid || inp.lifePaid || inp.eqPaid;
-      if (hasDed) {
-        const dedBody = document.getElementById('deductions-body');
-        if (dedBody && dedBody.style.display === 'none') {
-          toggleDeductions(document.querySelector('.deductions-header'));
-        }
-      }
-
-      // 計算実行
-      calculate();
-      document.querySelector('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    } catch(_) {
-      alert('JSONファイルの読み込みに失敗しました。\n正しい形式のファイルを選択してください。');
+  // 控除セクションを開く
+  const hasDed = inp.spouse || inp.deps || inp.depsSp || inp.kyosai ||
+                 inp.ideco  || inp.medPaid || inp.lifePaid || inp.eqPaid;
+  if (hasDed) {
+    const dedBody = document.getElementById('deductions-body');
+    if (dedBody && dedBody.style.display === 'none') {
+      toggleDeductions(document.querySelector('.deductions-header'));
     }
-  };
-  reader.readAsText(file);
-  e.target.value = ''; // 同じファイルの再選択を可能にする
+  }
+
+  calculate();
+  document.querySelector('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function importJSON(e) {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+
+  let data;
+  try {
+    data = JSON.parse(await file.text());
+    if (!data.inputs) throw new Error('形式エラー');
+  } catch(_) {
+    alert('JSONファイルの読み込みに失敗しました。\n正しい形式のファイルを選択してください。');
+    return;
+  }
+
+  // ── チェックサム検証 ──────────────────────────────────────────────────────
+  if (data.checksum) {
+    try {
+      const { checksum: stored, ...payload } = data;
+      const expected = await _computeHMAC(payload);
+      if (stored !== expected) {
+        const ok = confirm(
+          '⚠️ チェックサムが一致しません。\n' +
+          'ファイルが改ざんされているか、別のツールで作成された可能性があります。\n\n' +
+          'それでも読み込みますか？'
+        );
+        if (!ok) return;
+      }
+      // 一致：正常（何もしない）
+    } catch(_) {
+      // Crypto API 非対応環境はスキップ
+    }
+  } else {
+    const ok = confirm(
+      '⚠️ このファイルにはチェックサムが含まれていません。\n' +
+      '別のツールで作成されたか、手動で編集されている可能性があります。\n\n' +
+      'それでも読み込みますか？'
+    );
+    if (!ok) return;
+  }
+
+  _restoreForm(data.inputs);
 }
 </script>
 </body>
