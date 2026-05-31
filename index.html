@@ -320,6 +320,16 @@ input[type="number"]:focus, select:focus {
 .btn-calc:hover { box-shadow: 0 4px 16px rgba(37,99,235,0.45); transform: translateY(-1px); }
 .btn-calc:active { transform: translateY(0); }
 
+/* ── JSON 保存・読み込み ── */
+.json-toolbar { display: flex; gap: 0.5rem; margin-top: 0.625rem; }
+.btn-json {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.375rem;
+  padding: 0.45rem 0.75rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; border: 1.5px solid var(--border); background: white;
+  color: var(--text-muted); transition: all 0.15s;
+}
+.btn-json:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
 /* ── Results ── */
 #result-section { display: none; }
 #result-section.visible { display: block; }
@@ -1338,6 +1348,11 @@ textarea:focus {
     <button class="btn-calc" onclick="calculate()" aria-label="税金を計算する">計算する →</button>
     <p id="error-msg" role="alert" style="color:var(--red);font-size:0.85rem;margin-top:0.5rem;display:none;"></p>
     <p class="privacy-note" style="margin-top:0.625rem;margin-bottom:0;">🔒 入力した情報はサーバーへの送信・端末への保存は行われません。計算はすべてブラウザ内で完結します。</p>
+    <div class="json-toolbar">
+      <button class="btn-json" onclick="downloadJSON()" title="入力内容をJSONファイルに保存">⬇ 保存（JSON）</button>
+      <button class="btn-json" onclick="document.getElementById('json-import').click()" title="JSONファイルから入力を復元">⬆ 読み込む（JSON）</button>
+      <input type="file" id="json-import" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
+    </div>
   </div>
   </section>
 
@@ -2686,6 +2701,130 @@ function updateISimSavings() {
         <span class="isim-sum-fi-diff">▲ ${fmt(combinedSave)} 節税前比</span>
       </div>
     </div>`;
+}
+
+// ── JSON 保存・読み込み ──────────────────────────────────────────────────────
+function downloadJSON() {
+  const inputMode = document.querySelector('input[name="input-mode"]:checked').value;
+  const inputUnit = document.querySelector('input[name="input-unit"]:checked').value;
+  const unitMult  = inputUnit === 'man' ? 10_000 : 1;
+
+  let revenue, expenses;
+  if (inputMode === 'monthly') {
+    revenue  = getMonthlyTotal('rev') * unitMult;
+    expenses = getMonthlyTotal('exp') * unitMult;
+  } else {
+    revenue  = (parseFloat(document.getElementById('revenue').value)  || 0) * unitMult;
+    expenses = (parseFloat(document.getElementById('expenses').value) || 0) * unitMult;
+  }
+
+  const bizRateRaw = parseFloat(document.getElementById('business-type').value);
+  const data = {
+    version: '1.0',
+    savedAt: new Date().toISOString(),
+    inputs: {
+      revenue,
+      expenses,
+      filing:          parseFloat(document.querySelector('input[name="filing"]:checked').value),
+      bizRate:         isNaN(bizRateRaw) ? null : bizRateRaw,
+      bizLabel:        document.getElementById('business-type').options[document.getElementById('business-type').selectedIndex]?.text || '',
+      age:             document.getElementById('age').value,
+      prefecture:      document.getElementById('prefecture').value,
+      consumptionType: document.querySelector('input[name="consumption"]:checked').value,
+      spouse:          document.getElementById('d-spouse').checked,
+      deps:            parseInt(document.getElementById('d-dependents').value)    || 0,
+      depsSp:          parseInt(document.getElementById('d-dependents-sp').value) || 0,
+      kyosai:          parseFloat(document.getElementById('d-kyosai').value)     || 0,
+      ideco:           parseFloat(document.getElementById('d-ideco').value)      || 0,
+      medPaid:         parseFloat(document.getElementById('d-medical').value)    || 0,
+      lifePaid:        parseFloat(document.getElementById('d-life').value)       || 0,
+      eqPaid:          parseFloat(document.getElementById('d-earthquake').value) || 0,
+    },
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'tax-calc-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.inputs) throw new Error('形式エラー');
+      const inp = data.inputs;
+
+      // 年間入力モード・万円単位に切替
+      setInputMode('annual');
+      document.querySelector('input[name="input-mode"][value="annual"]').checked = true;
+      setInputUnit('man');
+      document.querySelector('input[name="input-unit"][value="man"]').checked = true;
+
+      // 売上・経費（yen → 万円）
+      document.getElementById('revenue').value  = inp.revenue  ? Math.round(inp.revenue  / 10_000) : '';
+      document.getElementById('expenses').value = inp.expenses ? Math.round(inp.expenses / 10_000) : '';
+      updatePreview('revenue',  'revenue-preview');
+      updatePreview('expenses', 'expenses-preview');
+
+      // 申告方法
+      const filingRadio = document.querySelector(`input[name="filing"][value="${inp.filing}"]`);
+      if (filingRadio) filingRadio.checked = true;
+
+      // 業種（同一valueの最初のoptionを選択）
+      if (inp.bizRate !== null && inp.bizRate !== undefined) {
+        const btEl = document.getElementById('business-type');
+        const opt  = Array.from(btEl.options).find(o => parseFloat(o.value) === inp.bizRate && o.value !== '');
+        if (opt) btEl.value = opt.value;
+        updateBizTypeTip();
+      }
+
+      // 年齢・都道府県・消費税
+      if (inp.age)        document.getElementById('age').value        = inp.age;
+      if (inp.prefecture) document.getElementById('prefecture').value = inp.prefecture;
+      if (inp.consumptionType) {
+        const r = document.querySelector(`input[name="consumption"][value="${inp.consumptionType}"]`);
+        if (r) r.checked = true;
+      }
+
+      // 控除
+      document.getElementById('d-spouse').checked        = !!inp.spouse;
+      document.getElementById('d-dependents').value      = inp.deps    || 0;
+      document.getElementById('d-dependents-sp').value   = inp.depsSp  || 0;
+      document.getElementById('d-kyosai').value          = inp.kyosai  || 0;
+      document.getElementById('d-ideco').value           = inp.ideco   || 0;
+      document.getElementById('d-medical').value         = inp.medPaid || 0;
+      document.getElementById('d-life').value            = inp.lifePaid|| 0;
+      document.getElementById('d-earthquake').value      = inp.eqPaid  || 0;
+
+      // 控除セクションを開く（入力値があれば）
+      const hasDed = inp.spouse || inp.deps || inp.depsSp || inp.kyosai ||
+                     inp.ideco  || inp.medPaid || inp.lifePaid || inp.eqPaid;
+      if (hasDed) {
+        const dedBody = document.getElementById('deductions-body');
+        if (dedBody && dedBody.style.display === 'none') {
+          toggleDeductions(document.querySelector('.deductions-header'));
+        }
+      }
+
+      // 計算実行
+      calculate();
+      document.querySelector('section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch(_) {
+      alert('JSONファイルの読み込みに失敗しました。\n正しい形式のファイルを選択してください。');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = ''; // 同じファイルの再選択を可能にする
 }
 </script>
 </body>
