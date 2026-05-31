@@ -321,7 +321,22 @@ input[type="number"]:focus, select:focus {
 .btn-calc:active { transform: translateY(0); }
 
 /* ── JSON 保存・読み込み ── */
-.json-toolbar { display: flex; gap: 0.5rem; margin-top: 0.625rem; }
+.json-toolbar { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.625rem; }
+.json-fname-row {
+  display: flex; align-items: center;
+  border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; background: white;
+}
+.json-fname-input {
+  flex: 1; border: none; outline: none;
+  padding: 0.42rem 0.625rem; font-size: 0.8rem; background: transparent; color: var(--text);
+  min-width: 0;
+}
+.json-fname-ext {
+  padding: 0.42rem 0.625rem; font-size: 0.8rem;
+  color: var(--text-muted); background: var(--gray-light);
+  border-left: 1.5px solid var(--border); white-space: nowrap;
+}
+.json-btn-row { display: flex; gap: 0.5rem; }
 .btn-json {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.375rem;
   padding: 0.45rem 0.75rem; border-radius: 7px; font-size: 0.8rem; font-weight: 600;
@@ -1349,9 +1364,15 @@ textarea:focus {
     <p id="error-msg" role="alert" style="color:var(--red);font-size:0.85rem;margin-top:0.5rem;display:none;"></p>
     <p class="privacy-note" style="margin-top:0.625rem;margin-bottom:0;">🔒 入力した情報はサーバーへの送信・端末への保存は行われません。計算はすべてブラウザ内で完結します。</p>
     <div class="json-toolbar">
-      <button class="btn-json" onclick="downloadJSON()" title="入力内容をJSONファイルに保存">⬇ 保存（JSON）</button>
-      <button class="btn-json" onclick="document.getElementById('json-import').click()" title="JSONファイルから入力を復元">⬆ 読み込む（JSON）</button>
-      <input type="file" id="json-import" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
+      <div class="json-fname-row">
+        <input type="text" id="json-filename" class="json-fname-input" placeholder="ファイル名">
+        <span class="json-fname-ext">.json</span>
+      </div>
+      <div class="json-btn-row">
+        <button class="btn-json" onclick="downloadJSON()" title="入力内容をJSONファイルに保存">⬇ 保存（JSON）</button>
+        <button class="btn-json" onclick="document.getElementById('json-import').click()" title="JSONファイルから入力を復元">⬆ 読み込む（JSON）</button>
+        <input type="file" id="json-import" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
+      </div>
     </div>
   </div>
   </section>
@@ -2762,7 +2783,9 @@ async function downloadJSON() {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = 'tax-calc-' + new Date().toISOString().slice(0, 10) + '.json';
+  const defaultName = 'tax-calc-' + new Date().toISOString().slice(0, 10);
+  const inputName   = (document.getElementById('json-filename').value || '').trim();
+  a.download = (inputName || defaultName).replace(/\.json$/i, '') + '.json';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -2866,8 +2889,14 @@ async function importJSON(e) {
     if (!ok) return;
   }
 
+  // 読み込んだファイル名をファイル名入力欄に反映（拡張子除去）
+  document.getElementById('json-filename').value = file.name.replace(/\.json$/i, '');
+
   _restoreForm(data.inputs);
 }
+
+// ファイル名欄をデフォルト値で初期化
+document.getElementById('json-filename').value = 'tax-calc-' + new Date().toISOString().slice(0, 10);
 </script>
 </body>
 </html>
